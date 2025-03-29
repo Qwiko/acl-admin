@@ -1,5 +1,5 @@
 
-import { Button, ChipField, CloneButton, Create, Datagrid, DateField, Edit, EditButton, Link, NumberField, NumberInput, ReferenceArrayField, ReferenceArrayInput, required, SelectField, SelectInput, ShowButton, SimpleForm, SingleFieldList, TextField, TextInput } from 'react-admin';
+import { BulkUpdateButton, Button, ChipField, CloneButton, Create, Datagrid, DateField, Edit, EditButton, Link, NumberField, NumberInput, ReferenceArrayField, ReferenceArrayInput, required, SelectField, SelectInput, ShowButton, SimpleForm, SingleFieldList, TextField, TextInput } from 'react-admin';
 
 
 import { ArrayField, Show, SimpleShowLayout, } from 'react-admin';
@@ -12,7 +12,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { BulkDeleteButton, List, useNotify, useRefresh } from 'react-admin';
 
 import { DeleteButton, TopToolbar } from 'react-admin';
-import { Tooltip } from '@mui/material';
+import { Stack, Tooltip } from '@mui/material';
 
 const TestFilters = [
     <TextInput label="Search" source="q" alwaysOn />,
@@ -69,6 +69,16 @@ const TestShowActions = () => {
 }
 
 
+const TestCaseBulkActionButtons = () => {
+    const { id } = useParams();
+    return (
+        <>
+            {/* <BulkUpdateButton resource={"tests/" + id + "/cases"} label="Reset Views" data={{ views: 0 }} icon={<VisibilityOff/>} /> */}
+            <BulkDeleteButton resource={"tests/" + id + "/cases"} mutationMode="pessimistic" />
+        </>
+    )
+}
+
 
 
 export const TestShow = () => {
@@ -108,7 +118,7 @@ export const TestShow = () => {
                     >
                         <AddIcon />
                     </Button>
-                    <Datagrid bulkActionButtons={false} rowClick={false}>
+                    <Datagrid bulkActionButtons={<TestCaseBulkActionButtons />} rowClick={false}>
                         <TextField source="name" sortable={false} />
                         <TextField source="source_network" sortable={false} emptyText="Any" />
                         <TextField source="destination_network" sortable={false} emptyText="Any" />
@@ -120,15 +130,22 @@ export const TestShow = () => {
                             { id: 'deny', name: 'Deny' },
                             { id: 'reject', name: 'Reject' },
                         ]} optionText={<ActionChip />} sortable={false} />
-                        <Tooltip title="Edit">
-                            <EditButton resource={"tests/" + id + "/cases"} label='' size="large" />
-                        </Tooltip>
-                        <Tooltip title="Clone">
-                            <CloneButton resource={"tests/" + id + "/cases"} label='' size="large" />
-                        </Tooltip>
-                        <Tooltip title="Delete">
-                            <DeleteButton resource={"tests/" + id + "/cases"} label='' size="large" mutationMode="pessimistic" redirect={"/tests/" + id + "/show"} mutationOptions={{ onSuccess: () => { refresh(); notify('Test case deleted') } }} />
-                        </Tooltip>
+                        <Stack
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="center"
+                            spacing={0}
+                        >
+                            <Tooltip title="Edit">
+                                <EditButton resource={"tests/" + id + "/cases"} label='' size="large" sx={{ "min-width": "0px", "margin": 0 }} />
+                            </Tooltip>
+                            <Tooltip title="Clone">
+                                <CloneButton resource={"tests/" + id + "/cases"} label='' size="large" sx={{ "min-width": "0px", "margin": 0 }} />
+                            </Tooltip>
+                            <Tooltip title="Delete">
+                                <DeleteButton resource={"tests/" + id + "/cases"} label='' size="large" sx={{ "min-width": "0px", "margin": 0 }} mutationMode="pessimistic" redirect={"/tests/" + id + "/show"} mutationOptions={{ onSuccess: () => { refresh(); notify('Test case deleted') } }} />
+                            </Tooltip>
+                        </Stack>
                     </Datagrid>
                 </ArrayField>
 

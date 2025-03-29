@@ -8,7 +8,7 @@ import HistoryIcon from '@mui/icons-material/History';
 import { useParams } from "react-router-dom";
 
 import AddIcon from '@mui/icons-material/Add';
-import { Tooltip, Typography } from '@mui/material';
+import { Stack, Tooltip, Typography } from '@mui/material';
 
 const PolicyBulkActionButtons = () => (
     <>
@@ -159,6 +159,16 @@ export const ReferenceServices = (props: ReferenceArrayFieldViewProps) => {
 
 const CustomTermEmpty = () => <div>No terms found</div>;
 
+const PolicyTermBulkActionButtons = () => {
+    const { id } = useParams();
+    return (
+        <>
+            {/* <BulkUpdateButton resource={"policies/" + id + "/terms"} label="Reset Views" data={{ views: 0 }} icon={<VisibilityOff/>} /> */}
+            <BulkDeleteButton resource={"policies/" + id + "/terms"} mutationMode="pessimistic" />
+        </>
+    )
+}
+
 export const PolicyShow = () => {
     const { id } = useParams();
 
@@ -206,7 +216,7 @@ export const PolicyShow = () => {
                     >
                         <AddIcon />
                     </Button>
-                    <Datagrid bulkActionButtons={false} rowClick={false} empty={<CustomTermEmpty />} >
+                    <Datagrid bulkActionButtons={<PolicyTermBulkActionButtons />} rowClick={false} empty={<CustomTermEmpty />} >
                         <TextField source="name" sortable={false} />
                         <ColoredBooleanField source="enabled" sortable={false} />
                         <ReferenceNetworks source="source_networks" reference="networks" sortable={false} />
@@ -228,15 +238,22 @@ export const PolicyShow = () => {
                         ]} optionText={<ActionChip />} sortable={false} />
                         <ColoredBooleanField source="logging" sortable={false} />
                         <ReferenceField source="nested_policy_id" reference="policies" sortable={false} />
-                        <Tooltip title="Edit">
-                            <EditButton resource={"policies/" + id + "/terms"} label='' size="large" />
-                        </Tooltip>
-                        <Tooltip title="Clone">
-                            <CloneButton resource={"policies/" + id + "/terms"} label='' size="large" />
-                        </Tooltip>
-                        <Tooltip title="Delete">
-                            <DeleteButton resource={"policies/" + id + "/terms"} label='' size="large" mutationMode="pessimistic" redirect="show" mutationOptions={{ onSuccess: () => { refresh(); notify('policy term deleted') } }} />
-                        </Tooltip>
+                        <Stack
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="center"
+                            spacing={0}
+                        >
+                            <Tooltip title="Edit">
+                                <EditButton resource={"policies/" + id + "/terms"} label='' size="large" sx={{ "min-width": "0px", "margin": 0 }} />
+                            </Tooltip>
+                            <Tooltip title="Clone">
+                                <CloneButton resource={"policies/" + id + "/terms"} label='' size="large" sx={{ "min-width": "0px", "margin": 0 }} />
+                            </Tooltip>
+                            <Tooltip title="Delete">
+                                <DeleteButton resource={"policies/" + id + "/terms"} label='' size="large" sx={{ "min-width": "0px", "margin": 0 }} mutationMode="pessimistic" redirect="show" mutationOptions={{ onSuccess: () => { refresh(); notify('policy term deleted') } }} />
+                            </Tooltip>
+                        </Stack>
                     </Datagrid>
                 </ArrayField>
             </SimpleShowLayout >

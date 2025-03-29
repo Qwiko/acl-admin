@@ -1,5 +1,5 @@
 
-import { Button, CloneButton, Create, Datagrid, DateField, Edit, EditButton, Link, NumberField, NumberInput, ReferenceArrayField, ReferenceArrayInput, required, SelectField, SelectInput, ShowButton, SimpleForm, TextField, TextInput } from 'react-admin';
+import { Button, ChipField, CloneButton, Create, Datagrid, DateField, Edit, EditButton, Link, NumberField, NumberInput, ReferenceArrayField, ReferenceArrayInput, required, SelectField, SelectInput, ShowButton, SimpleForm, SingleFieldList, TextField, TextInput } from 'react-admin';
 
 
 import { ArrayField, Show, SimpleShowLayout, } from 'react-admin';
@@ -12,6 +12,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { BulkDeleteButton, List, useNotify, useRefresh } from 'react-admin';
 
 import { DeleteButton, TopToolbar } from 'react-admin';
+import { Tooltip } from '@mui/material';
 
 const TestFilters = [
     <TextInput label="Search" source="q" alwaysOn />,
@@ -39,6 +40,7 @@ export const TestEdit = () => (
     <Edit redirect="show">
         <SimpleForm>
             <TextInput source="name" validate={required()} />
+            <TextInput source="comment" />
             <ReferenceArrayInput source="dynamic_policies" reference="dynamic_policies" />
             <ReferenceArrayInput source="policies" reference="policies" />
         </SimpleForm>
@@ -49,6 +51,7 @@ export const TestCreate = () => (
     <Create redirect="show">
         <SimpleForm>
             <TextInput source="name" validate={required()} />
+            <TextInput source="comment" />
             <ReferenceArrayInput source="dynamic_policies" reference="dynamic_policies" />
             <ReferenceArrayInput source="policies" reference="policies" />
         </SimpleForm>
@@ -76,24 +79,25 @@ export const TestShow = () => {
         <Show actions={<TestShowActions />}>
             <SimpleShowLayout>
                 <TextField source="name" />
+                <TextField source="comment" />
                 <DateField source="created_at" />
                 <DateField source="updated_at" />
-                <SimpleShowLayout>
-                    <ReferenceArrayField source="dynamic_policies" reference="dynamic_policies" >
-                        <Datagrid bulkActionButtons={false} rowClick={false}>
-                            <TextField source="name" />
-                            <ShowButton />
-                        </Datagrid>
-                    </ReferenceArrayField>
-                </SimpleShowLayout>
-                <SimpleShowLayout>
-                    <ReferenceArrayField source="policies" reference="policies" >
-                        <Datagrid bulkActionButtons={false} rowClick={false}>
-                            <TextField source="name" />
-                            <ShowButton />
-                        </Datagrid>
-                    </ReferenceArrayField>
-                </SimpleShowLayout>
+            </SimpleShowLayout>
+            <SimpleShowLayout>
+                <ReferenceArrayField source="dynamic_policies" reference="dynamic_policies" label="Connected Dynamic Policies">
+                    <SingleFieldList linkType="show" >
+                        <ChipField source="name" />
+                    </SingleFieldList>
+                </ReferenceArrayField>
+            </SimpleShowLayout>
+            <SimpleShowLayout>
+                <ReferenceArrayField source="policies" reference="policies" label="Connected Policies">
+                    <SingleFieldList linkType="show" >
+                        <ChipField source="name" />
+                    </SingleFieldList>
+                </ReferenceArrayField>
+            </SimpleShowLayout>
+            <SimpleShowLayout>
                 <ArrayField source="cases">
 
                     <Button
@@ -116,9 +120,15 @@ export const TestShow = () => {
                             { id: 'deny', name: 'Deny' },
                             { id: 'reject', name: 'Reject' },
                         ]} optionText={<ActionChip />} sortable={false} />
-                        <EditButton resource={"tests/" + id + "/cases"} label='' size="large" />
-                        <CloneButton resource={"tests/" + id + "/cases"} label='' size="large" />
-                        <DeleteButton resource={"tests/" + id + "/cases"} label='' size="large" mutationMode="pessimistic" redirect={"/tests/" + id + "/show"} mutationOptions={{ onSuccess: () => { refresh(); notify('Test case deleted') } }} />
+                        <Tooltip title="Edit">
+                            <EditButton resource={"tests/" + id + "/cases"} label='' size="large" />
+                        </Tooltip>
+                        <Tooltip title="Clone">
+                            <CloneButton resource={"tests/" + id + "/cases"} label='' size="large" />
+                        </Tooltip>
+                        <Tooltip title="Delete">
+                            <DeleteButton resource={"tests/" + id + "/cases"} label='' size="large" mutationMode="pessimistic" redirect={"/tests/" + id + "/show"} mutationOptions={{ onSuccess: () => { refresh(); notify('Test case deleted') } }} />
+                        </Tooltip>
                     </Datagrid>
                 </ArrayField>
 

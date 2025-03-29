@@ -46,7 +46,7 @@ export const RevisionCreate = () => {
             <SimpleForm>
                 <ReferenceInput source="dynamic_policy_id" reference='dynamic_policies' />
                 <ReferenceInput source="policy_id" reference='policies' />
-                <TextInput source="comment" validate={required()} multiline />
+                <TextInput source="comment" validate={required()} />
             </SimpleForm>
         </Create>
     )
@@ -56,7 +56,7 @@ export const RevisionEdit = () => {
     return (
         <Edit redirect="show" mutationMode='pessimistic'>
             <SimpleForm>
-                <TextInput source="comment" validate={required()} multiline />
+                <TextInput source="comment" validate={required()} />
             </SimpleForm>
         </Edit>
     )

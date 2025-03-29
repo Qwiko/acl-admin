@@ -39,10 +39,10 @@ export const App = () => (
             <Route path=":id/cases/:caseId" element={<TestCaseEdit />} />
         </Resource>
         <Resource name="dynamic_policies" {...dynamic_policies} >
-            <Route path=":id/tests" element={<TestResultShow />} />
+            <Route path=":id/test" element={<TestResultShow />} />
         </Resource>
         <Resource name="policies" {...policies} >
-            <Route path=":id/tests" element={<TestResultShow />} />
+            <Route path=":id/test" element={<TestResultShow />} />
             <Route path=":id/terms/create" element={<PolicyTermCreate />} />
             <Route path=":id/terms/:addressId" element={<PolicyTermEdit />} />
         </Resource>

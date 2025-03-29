@@ -8,7 +8,7 @@ import HistoryIcon from '@mui/icons-material/History';
 import { useParams } from "react-router-dom";
 
 import AddIcon from '@mui/icons-material/Add';
-import { Typography } from '@mui/material';
+import { Tooltip, Typography } from '@mui/material';
 
 const PolicyBulkActionButtons = () => (
     <>
@@ -33,6 +33,7 @@ export const PolicyEdit = () => (
             <TextInput source="name" validate={required()} />
             <TextInput source="comment" />
             <ReferenceArrayInput source="targets" reference='targets' />
+            <ReferenceArrayInput source="tests" reference='tests' />
         </SimpleForm>
     </Edit>
 );
@@ -43,6 +44,7 @@ export const PolicyCreate = () => (
             <TextInput source="name" validate={required()} />
             <TextInput source="comment" />
             <ReferenceArrayInput source="targets" reference='targets' />
+            <ReferenceArrayInput source="tests" reference='tests' />
         </SimpleForm>
     </Create>
 );
@@ -54,9 +56,9 @@ const PolicyShowActions = () => {
         <TopToolbar>
             <Button
                 component={Link}
-                to={`/policies/${id}/tests`}
+                to={`/policies/${id}/test`}
                 startIcon={<ChecklistRtlIcon />}
-                label="Run Tests"
+                label="Test"
             >
                 <ChecklistRtlIcon />
             </Button>
@@ -179,14 +181,19 @@ export const PolicyShow = () => {
 
 
             <SimpleShowLayout >
-                <ReferenceArrayField source="targets" reference='targets'>
-                    <Datagrid bulkActionButtons={false} rowClick={false}>
-                        <TextField source="name" />
-                        <ReferenceField source="generator" reference='target_generators' />
-                        <ShowButton />
-                    </Datagrid>
+                <ReferenceArrayField source="targets" reference='targets' label="Connected Targets">
+                    <SingleFieldList linkType="show" >
+                        <ChipField source="name" />
+                    </SingleFieldList>
                 </ReferenceArrayField>
+            </SimpleShowLayout>
 
+            <SimpleShowLayout >
+                <ReferenceArrayField source="tests" reference='tests' label="Connected Tests" >
+                    <SingleFieldList linkType="show" >
+                        <ChipField source="name" />
+                    </SingleFieldList>
+                </ReferenceArrayField>
             </SimpleShowLayout>
 
             <SimpleShowLayout >
@@ -221,9 +228,15 @@ export const PolicyShow = () => {
                         ]} optionText={<ActionChip />} sortable={false} />
                         <ColoredBooleanField source="logging" sortable={false} />
                         <ReferenceField source="nested_policy_id" reference="policies" sortable={false} />
-                        <EditButton resource={"policies/" + id + "/terms"} label='' size="large" />
-                        <CloneButton resource={"policies/" + id + "/terms"} label='' size="large" />
-                        <DeleteButton resource={"policies/" + id + "/terms"} label='' size="large" mutationMode="pessimistic" redirect="show" mutationOptions={{ onSuccess: () => { refresh(); notify('policy term deleted') } }} />
+                        <Tooltip title="Edit">
+                            <EditButton resource={"policies/" + id + "/terms"} label='' size="large" />
+                        </Tooltip>
+                        <Tooltip title="Clone">
+                            <CloneButton resource={"policies/" + id + "/terms"} label='' size="large" />
+                        </Tooltip>
+                        <Tooltip title="Delete">
+                            <DeleteButton resource={"policies/" + id + "/terms"} label='' size="large" mutationMode="pessimistic" redirect="show" mutationOptions={{ onSuccess: () => { refresh(); notify('policy term deleted') } }} />
+                        </Tooltip>
                     </Datagrid>
                 </ArrayField>
             </SimpleShowLayout >

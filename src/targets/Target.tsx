@@ -1,5 +1,5 @@
 
-import { BulkDeleteButton, Create, Datagrid, DateField, Edit, EditButton, ReferenceArrayField, ReferenceArrayInput, required, SelectArrayInput, SelectField, SelectInput, SimpleForm, TextField, TextInput } from 'react-admin';
+import { BulkDeleteButton, ChipField, Create, Datagrid, DateField, Edit, EditButton, ReferenceArrayField, ReferenceArrayInput, required, SelectArrayInput, SelectField, SelectInput, SimpleForm, SingleFieldList, TextField, TextInput } from 'react-admin';
 
 
 
@@ -114,19 +114,17 @@ export const TargetShow = () => {
                 <DateField source="updated_at" />
             </SimpleShowLayout>
             <SimpleShowLayout>
-                <ReferenceArrayField source="dynamic_policies" reference="dynamic_policies" >
-                    <Datagrid bulkActionButtons={false} rowClick={false}>
-                        <TextField source="name" />
-                        <ShowButton />
-                    </Datagrid>
+                <ReferenceArrayField source="dynamic_policies" reference="dynamic_policies" label="Connected Dynamic Policies" >
+                    <SingleFieldList linkType="show" >
+                        <ChipField source="name" />
+                    </SingleFieldList>
                 </ReferenceArrayField>
             </SimpleShowLayout>
             <SimpleShowLayout>
-                <ReferenceArrayField source="policies" reference="policies" >
-                    <Datagrid bulkActionButtons={false} rowClick={false}>
-                        <TextField source="name" />
-                        <ShowButton />
-                    </Datagrid>
+                <ReferenceArrayField source="policies" reference="policies" label="Connected Policies">
+                    <SingleFieldList linkType="show" >
+                        <ChipField source="name" />
+                    </SingleFieldList>
                 </ReferenceArrayField>
             </SimpleShowLayout>
 

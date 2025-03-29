@@ -1,5 +1,5 @@
 
-import {  AutocompleteArrayInput, BulkDeleteButton, Button, Create, Datagrid, DateField, DeleteButton, Edit, EditButton, Link, List, ReferenceArrayField, ReferenceArrayInput, ReferenceField, required, SelectField, SelectInput, Show, ShowButton, SimpleForm, SimpleShowLayout, TextField, TextInput, TopToolbar, useDataProvider, useNotify, useRefresh, useRecordContext } from 'react-admin';
+import { AutocompleteArrayInput, ChipField, BulkDeleteButton, Button, Create, Datagrid, DateField, DeleteButton, Edit, EditButton, Link, List, ReferenceArrayField, ReferenceArrayInput, ReferenceField, required, SelectField, SelectInput, Show, ShowButton, SimpleForm, SimpleShowLayout, TextField, TextInput, TopToolbar, useDataProvider, useNotify, useRefresh, useRecordContext, SingleFieldList } from 'react-admin';
 import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
 
 import AddIcon from '@mui/icons-material/Add';
@@ -39,6 +39,7 @@ export const DynamicPolicyEdit = () => (
                 { id: 'deny-log', name: 'Deny Log' },
             ]} resettable />
             <ReferenceArrayInput source="targets" reference='targets' />
+            <ReferenceArrayInput source="tests" reference='tests' />
             <ReferenceArrayInput source="source_filters" reference='networks' />
             <ReferenceArrayInput source="destination_filters" reference='networks' />
         </SimpleForm>
@@ -64,6 +65,7 @@ export const DynamicPolicyCreate = () => (
             <ReferenceArrayInput source="targets" reference='targets' >
                 <AutocompleteArrayInput optionText="generator" />
             </ReferenceArrayInput>
+            <ReferenceArrayInput source="tests" reference='tests' />
             <ReferenceArrayInput source="source_filters" reference='networks' />
             <ReferenceArrayInput source="destination_filters" reference='networks' />
         </SimpleForm>
@@ -77,9 +79,9 @@ const DynamicPolicyShowActions = () => {
         <TopToolbar>
             <Button
                 component={Link}
-                to={`/dynamic_policies/${id}/tests`}
+                to={`/dynamic_policies/${id}/test`}
                 startIcon={<ChecklistRtlIcon />}
-                label="Run Tests"
+                label="Test"
             >
                 <ChecklistRtlIcon />
             </Button>
@@ -142,15 +144,22 @@ export const DynamicPolicyShow = () => {
                 ]} />
             </SimpleShowLayout>
 
-            <SimpleShowLayout>
-                <ReferenceArrayField source="targets" reference='targets'>
-                    <Datagrid bulkActionButtons={false} rowClick={false}>
-                        <TextField source="name" />
-                        <ReferenceField source="generator" reference='target_generators' />
-                        <ShowButton />
-                    </Datagrid>
+            <SimpleShowLayout >
+                <ReferenceArrayField source="targets" reference='targets' label="Connected Targets">
+                    <SingleFieldList linkType="show" >
+                        <ChipField source="name" />
+                    </SingleFieldList>
                 </ReferenceArrayField>
             </SimpleShowLayout>
+
+            <SimpleShowLayout >
+                <ReferenceArrayField source="tests" reference='tests' label="Connected Tests" >
+                    <SingleFieldList linkType="show" >
+                        <ChipField source="name" />
+                    </SingleFieldList>
+                </ReferenceArrayField>
+            </SimpleShowLayout>
+
             <SimpleShowLayout>
                 <ReferenceArrayField source="source_filters" reference='networks'>
                     <Datagrid bulkActionButtons={false} rowClick={false}>

@@ -1,5 +1,5 @@
 
-import { Button, Create, CreateButton, Datagrid, DateField, Edit, EditButton, Link, ReferenceArrayField, ReferenceInput, required, ShowButton, SimpleForm, TextField, TextInput } from 'react-admin';
+import { Button, CloneButton, Create, SingleFieldList, ChipField, CreateButton, Datagrid, DateField, Edit, EditButton, Link, ReferenceArrayField, ReferenceInput, required, ShowButton, SimpleForm, TextField, TextInput } from 'react-admin';
 
 
 import { BulkDeleteButton, List } from 'react-admin';
@@ -106,33 +106,30 @@ const NetworkUsageReferences = () => {
         <>
             {references.dynamic_policies.length > 0 && (
                 <SimpleShowLayout>
-                    <ReferenceArrayField record={references} source="dynamic_policies" reference="dynamic_policies">
-                        <Datagrid>
-                            <TextField source="name" />
-                            <ShowButton />
-                        </Datagrid>
+                    <ReferenceArrayField record={references} source="dynamic_policies" reference="dynamic_policies" label="Referenced in Dynamic Policies">
+                        <SingleFieldList linkType="show" >
+                            <ChipField source="name" />
+                        </SingleFieldList>
                     </ReferenceArrayField>
                 </SimpleShowLayout>
             )}
 
             {references.policies.length > 0 && (
                 <SimpleShowLayout>
-                    <ReferenceArrayField record={references} source="policies" reference="policies">
-                        <Datagrid>
-                            <TextField source="name" />
-                            <ShowButton />
-                        </Datagrid>
+                    <ReferenceArrayField record={references} source="policies" reference="policies" label="Referenced in Policies">
+                        <SingleFieldList linkType="show" >
+                            <ChipField source="name" />
+                        </SingleFieldList>
                     </ReferenceArrayField>
                 </SimpleShowLayout>
             )}
 
             {references.networks.length > 0 && (
                 <SimpleShowLayout>
-                    <ReferenceArrayField record={references} source="networks" reference="networks">
-                        <Datagrid>
-                            <TextField source="name" />
-                            <ShowButton />
-                        </Datagrid>
+                    <ReferenceArrayField record={references} source="networks" reference="networks" label="Referenced in Networks">
+                        <SingleFieldList linkType="show" >
+                            <ChipField source="name" />
+                        </SingleFieldList>
                     </ReferenceArrayField>
                 </SimpleShowLayout>
             )}
@@ -142,6 +139,7 @@ const NetworkUsageReferences = () => {
 
 
 import { useNotify, useRefresh } from 'react-admin';
+import { Tooltip } from '@mui/material';
 
 export const NetworkShow = () => {
     const { id } = useParams();
@@ -168,8 +166,15 @@ export const NetworkShow = () => {
                         <TextField source="address" />
                         <TextField source="comment" />
                         <ReferenceField source="nested_network_id" reference="networks" />
-                        <EditButton resource={"networks/" + id + "/addresses"} />
-                        <DeleteButton resource={"networks/" + id + "/addresses"} mutationMode="pessimistic" redirect={"/networks/" + id + "/show"} mutationOptions={{ onSuccess: () => { refresh(); notify('Network address deleted') } }} />
+                        <Tooltip title="Edit">
+                            <EditButton resource={"networks/" + id + "/addresses"} label='' size="large" />
+                        </Tooltip>
+                        <Tooltip title="Clone">
+                            <CloneButton resource={"networks/" + id + "/addresses"} label='' size="large" />
+                        </Tooltip>
+                        <Tooltip title="Delete">
+                            <DeleteButton resource={"networks/" + id + "/addresses"} label='' size="large" mutationMode="pessimistic" redirect={"/networks/" + id + "/show"} mutationOptions={{ onSuccess: () => { refresh(); notify('Network address deleted') } }} />
+                        </Tooltip>
                     </Datagrid>
                 </ArrayField>
 

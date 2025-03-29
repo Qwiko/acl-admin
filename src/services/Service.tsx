@@ -1,5 +1,5 @@
 
-import { BulkDeleteButton, Create, Datagrid, DateField, Edit, EditButton, Link, required, SimpleForm, TextField, TextInput } from 'react-admin';
+import { BulkDeleteButton, ChipField, CloneButton, Create, Datagrid, DateField, Edit, EditButton, Link, required, SimpleForm, SingleFieldList, TextField, TextInput } from 'react-admin';
 
 
 import { ArrayField, ReferenceField, ReferenceInput, Show, SimpleShowLayout } from 'react-admin';
@@ -74,7 +74,7 @@ export const ServiceEntryCreate = () => {
     );
 }
 
-import { ReferenceArrayField, ShowButton, useDataProvider } from 'react-admin';
+import { ReferenceArrayField, useDataProvider } from 'react-admin';
 
 import { useEffect, useState } from 'react';
 
@@ -102,11 +102,10 @@ const ServiceUsageReferences = () => {
         <>
             {references.policies.length > 0 && (
                 <SimpleShowLayout>
-                    <ReferenceArrayField record={references} source="policies" reference="policies">
-                        <Datagrid>
-                            <TextField source="name" />
-                            <ShowButton />
-                        </Datagrid>
+                    <ReferenceArrayField record={references} source="policies" reference="policies" label="Referenced in Policies">
+                        <SingleFieldList linkType="show" >
+                            <ChipField source="name" />
+                        </SingleFieldList>
                     </ReferenceArrayField>
                 </SimpleShowLayout>
             )}
@@ -114,11 +113,10 @@ const ServiceUsageReferences = () => {
             {references.services.length > 0 && (
                 <SimpleShowLayout>
                     {/* <Labeled label="Services"> */}
-                    <ReferenceArrayField record={references} source="services" reference="services">
-                        <Datagrid>
-                            <TextField source="name" />
-                            <ShowButton />
-                        </Datagrid>
+                    <ReferenceArrayField record={references} source="services" reference="services" label="Referenced in Services">
+                        <SingleFieldList linkType="show" >
+                            <ChipField source="name" />
+                        </SingleFieldList>
                     </ReferenceArrayField>
                     {/* </Labeled> */}
                 </SimpleShowLayout>
@@ -128,6 +126,7 @@ const ServiceUsageReferences = () => {
 };
 
 
+import { Tooltip } from '@mui/material';
 import { useNotify, useRefresh } from 'react-admin';
 export const ServiceShow = () => {
     const { id } = useParams();
@@ -159,8 +158,15 @@ export const ServiceShow = () => {
                         <TextField source="protocol" />
                         <TextField source="port" />
                         <ReferenceField source="nested_service_id" reference="services" />
-                        <EditButton resource={"services/" + id + "/entries"} />
-                        <DeleteButton resource={"services/" + id + "/entries"} mutationMode="pessimistic" redirect={"/services/" + id + "/show"} mutationOptions={{ onSuccess: () => { refresh(); notify('Service address deleted') } }} />
+                        <Tooltip title="Edit">
+                            <EditButton resource={"services/" + id + "/entries"} label='' size="large" />
+                        </Tooltip>
+                        <Tooltip title="Clone">
+                            <CloneButton resource={"services/" + id + "/entries"} label='' size="large" />
+                        </Tooltip>
+                        <Tooltip title="Delete">
+                            <DeleteButton resource={"services/" + id + "/entries"} label='' size="large" mutationMode="pessimistic" redirect={"/services/" + id + "/show"} mutationOptions={{ onSuccess: () => { refresh(); notify('Service address deleted') } }} />
+                        </Tooltip>
                     </Datagrid>
                 </ArrayField>
             </SimpleShowLayout>

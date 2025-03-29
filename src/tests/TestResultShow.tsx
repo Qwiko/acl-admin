@@ -4,8 +4,7 @@ import { ArrayField, Datagrid, NumberField, ReferenceField, SelectField, Show, S
 
 import { useParams } from "react-router-dom";
 import { Identifier, RaRecord } from 'react-admin';
-import { ActionChip, ColoredBooleanField } from '../shared/Shared';
-import { ReferenceNetworks, ReferenceServices } from '../policies/Policy';
+import { ActionChip, ColoredBooleanField, ReferenceNetworks, ReferenceServices } from '../shared/Shared';
 
 const CustomTestEmpty = () => <div style={{ "padding": "6px" }}>No tests found</ div>;
 

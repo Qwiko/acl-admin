@@ -42,6 +42,7 @@ export const DynamicPolicyEdit = () => (
             <ReferenceArrayInput source="tests" reference='tests' />
             <ReferenceArrayInput source="source_filters" reference='networks' />
             <ReferenceArrayInput source="destination_filters" reference='networks' />
+            <ReferenceArrayInput source="policy_filters" reference='policies' />
         </SimpleForm>
     </Edit>
 );
@@ -68,6 +69,7 @@ export const DynamicPolicyCreate = () => (
             <ReferenceArrayInput source="tests" reference='tests' />
             <ReferenceArrayInput source="source_filters" reference='networks' />
             <ReferenceArrayInput source="destination_filters" reference='networks' />
+            <ReferenceArrayInput source="policy_filters" reference='policies' />
         </SimpleForm>
     </Create>
 );
@@ -146,7 +148,7 @@ export const DynamicPolicyShow = () => {
 
             <SimpleShowLayout >
                 <ReferenceArrayField source="targets" reference='targets' label="Connected Targets">
-                    <SingleFieldList linkType="show" >
+                    <SingleFieldList linkType="show" empty={<>None</>}>
                         <ChipField source="name" />
                     </SingleFieldList>
                 </ReferenceArrayField>
@@ -154,7 +156,7 @@ export const DynamicPolicyShow = () => {
 
             <SimpleShowLayout >
                 <ReferenceArrayField source="tests" reference='tests' label="Connected Tests" >
-                    <SingleFieldList linkType="show" >
+                    <SingleFieldList linkType="show" empty={<>None</>}>
                         <ChipField source="name" />
                     </SingleFieldList>
                 </ReferenceArrayField>
@@ -162,18 +164,23 @@ export const DynamicPolicyShow = () => {
 
             <SimpleShowLayout>
                 <ReferenceArrayField source="source_filters" reference='networks'>
-                    <Datagrid bulkActionButtons={false} rowClick={false}>
-                        <TextField source="name" />
-                        <ShowButton />
-                    </Datagrid>
+                    <SingleFieldList linkType="show" empty={<>Any</>}>
+                        <ChipField source="name" />
+                    </SingleFieldList>
                 </ReferenceArrayField>
             </SimpleShowLayout>
             <SimpleShowLayout>
                 <ReferenceArrayField source="destination_filters" reference='networks'>
-                    <Datagrid bulkActionButtons={false} rowClick={false}>
-                        <TextField source="name" />
-                        <ShowButton />
-                    </Datagrid>
+                    <SingleFieldList linkType="show" empty={<>Any</>}>
+                        <ChipField source="name" />
+                    </SingleFieldList>
+                </ReferenceArrayField>
+            </SimpleShowLayout>
+            <SimpleShowLayout>
+                <ReferenceArrayField source="policy_filters" reference='policies'>
+                    <SingleFieldList linkType="show" empty={<>Any</>}>
+                        <ChipField source="name" />
+                    </SingleFieldList>
                 </ReferenceArrayField>
             </SimpleShowLayout>
         </Show>

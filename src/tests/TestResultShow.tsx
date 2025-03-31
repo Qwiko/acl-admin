@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import { ArrayField, Datagrid, NumberField, ReferenceField, SelectField, Show, SimpleShowLayout, TabbedShowLayout, TextField, TopToolbar, useDataProvider, useRecordContext, useResourceContext } from 'react-admin';
+import { FunctionField, ArrayField, Datagrid, NumberField, ReferenceField, SelectField, Show, SimpleShowLayout, TabbedShowLayout, TextField, TopToolbar, useDataProvider, useRecordContext, useResourceContext } from 'react-admin';
 
 import { useParams } from "react-router-dom";
 import { Identifier, RaRecord } from 'react-admin';
@@ -109,7 +109,24 @@ const TestResultShowInside = () => {
                     <Datagrid bulkActionButtons={false} rowClick="expand" empty={<CustomTestEmpty />} expand={<TestExpandPanel />}>
                         <TextField source="case.name" />
                         <ColoredBooleanField source="passed" />
-                        <TextField source="matched_term.name" />
+                        <FunctionField
+                            label="Matched Term Name"
+                            render={(record) => {
+                                if (!record) {
+                                    return "No record";
+                                }
+
+                                if (record.passed == true && record.matched_term == null) {
+                                    return "Dynamic Policy Default Action";
+                                }
+
+                                if (record.matched_term && 'name' in record.matched_term) {
+                                    return record.matched_term.name;
+                                }
+
+                                return "No matched term";
+                            }}
+                        />
                     </Datagrid>
                 </ArrayField>
             </TabbedShowLayout.Tab>

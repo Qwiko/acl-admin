@@ -18,7 +18,7 @@ import { ServiceEntryCreate, ServiceEntryEdit } from './services/Service';
 import { TestCaseCreate, TestCaseEdit } from './tests/Test';
 import { TestResultShow } from './tests/TestResultShow';
 
-const apiUrl = import.meta.env.VITE_SIMPLE_REST_URL;
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export const App = () => (
     <Admin

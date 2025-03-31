@@ -17,14 +17,6 @@ const alias = [
     find: "ra-language-english",
     replacement: path.resolve(__dirname, "./node_modules/ra-language-english/src"),
   },
-  // {
-  //   find: "ra-data-json-server",
-  //   replacement: path.resolve(__dirname, "./node_modules/ra-data-json-server/src"),
-  // },
-  // {
-  //   find: "ra-data-simple-rest",
-  //   replacement: path.resolve(__dirname, "./node_modules/ra-data-simple-rest/src"),
-  // },
   {
     find: "ra-data-fakerest",
     replacement: path.resolve(__dirname, "./node_modules/ra-data-fakerest/src"),
@@ -39,7 +31,7 @@ export default defineConfig(({ mode }) => ({
     host: true,
   },
   build: {
-    sourcemap: mode === "developement",
+    sourcemap: mode === "development",
   },
   resolve: { alias },
   base: "./",

@@ -24,11 +24,11 @@ const TestExpandPanel = () => {
     }
     return (
         <>
-            <SimpleShowLayout direction="row" >
+            <SimpleShowLayout direction="row" sx={{ px: 0 }}>
                 <ReferenceField reference='tests' source="case.test_id" label="Test" />
                 <ReferenceField reference='policies' source="matched_term.policy_id" label="Policy" />
             </SimpleShowLayout>
-            <SimpleShowLayout>
+            <SimpleShowLayout sx={{ px: 0 }}>
                 <ArrayField label="Test Case" source="cases" >
                     <Datagrid bulkActionButtons={false} rowClick={TestRowClickRedirect} >
                         <TextField source="name" sortable={false} />
@@ -47,7 +47,7 @@ const TestExpandPanel = () => {
             </SimpleShowLayout >
             {
                 record.matched_term && (
-                    <SimpleShowLayout>
+                    <SimpleShowLayout sx={{ px: 0 }}>
                         <ArrayField label="Matched Term" source="matched_terms" >
                             <Datagrid bulkActionButtons={false} rowClick={PolicyRowClickRedirect} >
                                 <TextField source="name" sortable={false} />
@@ -78,10 +78,6 @@ const TestExpandPanel = () => {
         </>
     );
 };
-
-
-
-
 
 
 const TestResultShowInside = () => {
@@ -155,8 +151,6 @@ const TestResultShowInside = () => {
                         <ReferenceField source="nested_policy_id" reference="policies" sortable={false} />
                     </Datagrid>
                 </ArrayField>
-
-
             </TabbedShowLayout.Tab>
         </TabbedShowLayout >
     )

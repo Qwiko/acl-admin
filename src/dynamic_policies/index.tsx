@@ -1,5 +1,4 @@
 import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
-import { ListGuesser, EditGuesser, ShowGuesser, } from 'react-admin';
 
 
 import { DynamicPolicyList, DynamicPolicyCreate, DynamicPolicyEdit, DynamicPolicyShow } from './DynamicPolicy';

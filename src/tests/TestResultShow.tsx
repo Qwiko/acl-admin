@@ -1,10 +1,11 @@
 
 import { useEffect, useState } from 'react';
-import { FunctionField, ArrayField, Datagrid, NumberField, ReferenceField, SelectField, Show, SimpleShowLayout, TabbedShowLayout, TextField, TopToolbar, useDataProvider, useRecordContext, useResourceContext } from 'react-admin';
+import { FunctionField, ArrayField, Datagrid, NumberField, ReferenceField, SelectField, Show, SimpleShowLayout, TabbedShowLayout, TextField, TopToolbar, useDataProvider, useRecordContext, useResourceContext, ShowBase, Title } from 'react-admin';
 
 import { useParams } from "react-router-dom";
 import { Identifier, RaRecord } from 'react-admin';
 import { ActionChip, ColoredBooleanField, ReferenceNetworks, ReferenceServices } from '../shared/Shared';
+import { Card, CardContent, Container } from '@mui/material';
 
 const CustomTestEmpty = () => <div style={{ "padding": "6px" }}>No tests found</ div>;
 
@@ -13,8 +14,6 @@ const TestRowClickRedirect = (id: Identifier, resource: string, record: RaRecord
 const PolicyRowClickRedirect = (id: Identifier, resource: string, record: RaRecord) => (`/policies/${record.policy_id}/show`)
 
 const CustomTestPolicyEmpty = () => <div style={{ "padding": "6px" }}>All policy terms have a matching test</div>;
-
-const TestResultShowActions = () => (<TopToolbar />);
 
 const TestExpandPanel = () => {
     const record = useRecordContext();
@@ -103,7 +102,7 @@ const TestResultShowInside = () => {
     }, [id, dataProvider]);
     if (!tests) return null;
     return (
-        <TabbedShowLayout record={tests} syncWithLocation={false} sx={{ [`& .RaTabbedShowLayout-content`]: { padding: "0px" } }}>
+        <TabbedShowLayout record={tests} syncWithLocation={false} sx={{ [`& .RaTabbedShowLayout-content`]: { padding: "0px" }, px: 0 }}>
             <TabbedShowLayout.Tab label={`Tests (${tests.tests.length})`}>
                 <ArrayField source="tests" label="" >
                     <Datagrid bulkActionButtons={false} rowClick="expand" empty={<CustomTestEmpty />} expand={<TestExpandPanel />}>
@@ -163,11 +162,24 @@ const TestResultShowInside = () => {
     )
 }
 
+
 export const TestResultShow = () => {
     return (
-        <Show actions={<TestResultShowActions />}>
-            <TestResultShowInside />
-        </Show >
+        <Container disableGutters maxWidth={false} sx={{
+            paddingTop: "1em",
+            px: 0,
+        }} >
+            <Title title="Test Results" />
+            <Card>
+                <CardContent sx={{
+                    padding: "0px", margin: "0px", '&:last-child': {
+                        paddingBottom: 0,
+                    },
+                }}>
+                    <TestResultShowInside />
+                </CardContent>
+            </Card>
+        </Container>
     );
 }
 

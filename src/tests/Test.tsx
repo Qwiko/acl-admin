@@ -11,7 +11,8 @@ import AddIcon from '@mui/icons-material/Add';
 import { BulkDeleteButton, List, useNotify, useRefresh } from 'react-admin';
 
 import { DeleteButton, TopToolbar } from 'react-admin';
-import { Stack, Tooltip } from '@mui/material';
+import { Stack } from '@mui/material';
+
 
 const TestFilters = [
     <TextInput label="Search" source="q" alwaysOn />,
@@ -144,15 +145,9 @@ export const TestShow = () => {
                             alignItems="center"
                             spacing={0}
                         >
-                            <Tooltip title="Edit">
-                                <EditButton resource={"tests/" + id + "/cases"} label='' size="large" sx={{ "minWidth": "0px", "margin": 0 }} />
-                            </Tooltip>
-                            <Tooltip title="Clone">
-                                <CloneButton resource={"tests/" + id + "/cases"} label='' size="large" sx={{ "minWidth": "0px", "margin": 0 }} />
-                            </Tooltip>
-                            <Tooltip title="Delete">
-                                <DeleteButton resource={"tests/" + id + "/cases"} label='' size="large" sx={{ "minWidth": "0px", "margin": 0 }} mutationMode="pessimistic" redirect={"/tests/" + id + "/show"} mutationOptions={{ onSuccess: () => { refresh(); notify('Test case deleted') } }} />
-                            </Tooltip>
+                            <EditButton resource={"tests/" + id + "/cases"} label='' size="large" sx={{ "minWidth": "0px", "margin": 0 }} />
+                            <CloneButton resource={"tests/" + id + "/cases"} label='' size="large" sx={{ "minWidth": "0px", "margin": 0 }} />
+                            <DeleteButton resource={"tests/" + id + "/cases"} label='' size="large" sx={{ "minWidth": "0px", "margin": 0 }} mutationMode="pessimistic" redirect={"/tests/" + id + "/show"} mutationOptions={{ onSuccess: () => { refresh(); notify('Test case deleted') } }} />
                         </Stack>
                     </Datagrid>
                 </ArrayField>

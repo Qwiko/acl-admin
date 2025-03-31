@@ -1,13 +1,13 @@
 
-import { useDataProvider, ArrayField, BooleanInput, BulkDeleteButton, Button, ChipField, CloneButton, Create, Datagrid, DateField, DeleteButton, Edit, EditButton, FormDataConsumer, Link, List, ReferenceArrayField, ReferenceArrayFieldViewProps, ReferenceArrayInput, ReferenceField, ReferenceInput, required, SelectField, SelectInput, Show, ShowButton, SimpleForm, SimpleShowLayout, SingleFieldList, TextField, TextInput, TopToolbar, useNotify, useRecordContext, useRefresh } from 'react-admin';
+import { ArrayField, BooleanInput, BulkDeleteButton, Button, ChipField, CloneButton, Create, Datagrid, DateField, DeleteButton, Edit, EditButton, FormDataConsumer, Link, List, ReferenceArrayField, ReferenceArrayInput, ReferenceField, ReferenceInput, required, SelectField, SelectInput, Show, ShowButton, SimpleForm, SimpleShowLayout, SingleFieldList, TextField, TextInput, TopToolbar, useDataProvider, useNotify, useRefresh } from 'react-admin';
 
 import { useEffect, useState } from 'react';
 
+import AddIcon from '@mui/icons-material/Add';
 import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
 import HistoryIcon from '@mui/icons-material/History';
-import AddIcon from '@mui/icons-material/Add';
 
-import { Stack, Tooltip, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 
 import { ActionChip, BulkUpdateFormButton, ColoredBooleanField, ReferenceNetworks, ReferenceServices } from '../shared/Shared';
 
@@ -240,15 +240,9 @@ export const PolicyShow = () => {
                             alignItems="center"
                             spacing={0}
                         >
-                            <Tooltip title="Edit">
-                                <EditButton resource={"policies/" + id + "/terms"} label='' size="large" sx={{ "minWidth": "0px", "margin": 0 }} />
-                            </Tooltip>
-                            <Tooltip title="Clone">
-                                <CloneButton resource={"policies/" + id + "/terms"} label='' size="large" sx={{ "minWidth": "0px", "margin": 0 }} />
-                            </Tooltip>
-                            <Tooltip title="Delete">
-                                <DeleteButton resource={"policies/" + id + "/terms"} label='' size="large" sx={{ "minWidth": "0px", "margin": 0 }} mutationMode="pessimistic" redirect="show" mutationOptions={{ onSuccess: () => { refresh(); notify('policy term deleted') } }} />
-                            </Tooltip>
+                            <EditButton resource={"policies/" + id + "/terms"} label='' size="large" sx={{ "minWidth": "0px", "margin": 0 }} />
+                            <CloneButton resource={"policies/" + id + "/terms"} label='' size="large" sx={{ "minWidth": "0px", "margin": 0 }} />
+                            <DeleteButton resource={"policies/" + id + "/terms"} label='' size="large" sx={{ "minWidth": "0px", "margin": 0 }} mutationMode="pessimistic" redirect="show" mutationOptions={{ onSuccess: () => { refresh(); notify('policy term deleted') } }} />
                         </Stack>
                     </Datagrid>
                 </ArrayField>

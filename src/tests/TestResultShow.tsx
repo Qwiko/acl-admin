@@ -26,7 +26,9 @@ const TestExpandPanel = () => {
         <>
             <SimpleShowLayout direction="row" sx={{ px: 0 }}>
                 <ReferenceField reference='tests' source="case.test_id" label="Test" />
-                <ReferenceField reference='policies' source="matched_term.policy_id" label="Policy" />
+                {record.matched_term && (
+                    <ReferenceField reference='policies' source="matched_term.policy_id" label="Policy" />
+                )}
             </SimpleShowLayout>
             <SimpleShowLayout sx={{ px: 0 }}>
                 <ArrayField label="Test Case" source="cases" >

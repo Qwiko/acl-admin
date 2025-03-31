@@ -1,5 +1,4 @@
-import RuleIcon from '@mui/icons-material/Rule';
-
+import FormatListNumberedRtlIcon from '@mui/icons-material/FormatListNumberedRtl';
 
 import { PolicyList, PolicyCreate, PolicyEdit, PolicyShow } from './Policy';
 
@@ -10,6 +9,6 @@ export default {
     create: PolicyCreate,
     edit: PolicyEdit,
     show: PolicyShow,
-    icon: RuleIcon,
+    icon: FormatListNumberedRtlIcon,
     // recordRepresentation: (record: Policy) => `"${record.reference}"`,
 };

@@ -63,9 +63,7 @@ export const DynamicPolicyCreate = () => (
                 { id: 'deny', name: 'Deny' },
                 { id: 'deny-log', name: 'Deny Log' },
             ]} resettable />
-            <ReferenceArrayInput source="targets" reference='targets' >
-                <AutocompleteArrayInput optionText="generator" />
-            </ReferenceArrayInput>
+            <ReferenceArrayInput source="targets" reference='targets' />
             <ReferenceArrayInput source="tests" reference='tests' />
             <ReferenceArrayInput source="source_filters" reference='networks' />
             <ReferenceArrayInput source="destination_filters" reference='networks' />

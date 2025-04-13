@@ -7,6 +7,7 @@ import dataProvider from './dataProvider';
 import dynamic_policies from './dynamic_policies';
 import networks from './networks';
 import policies from './policies';
+import publishers from './publishers';
 import revisions from './revisions';
 import services from './services';
 import targets from './targets';
@@ -40,13 +41,16 @@ export const App = () => (
         </Resource>
         <Resource name="dynamic_policies" {...dynamic_policies} >
             <Route path=":id/test" element={<TestResultShow />} />
+            <Route path=":id/test/not_matched" element={<TestResultShow />} />
         </Resource>
         <Resource name="policies" {...policies} >
             <Route path=":id/test" element={<TestResultShow />} />
+            <Route path=":id/test/not_matched" element={<TestResultShow />} />
             <Route path=":id/terms/create" element={<PolicyTermCreate />} />
             <Route path=":id/terms/:addressId" element={<PolicyTermEdit />} />
         </Resource>
         <Resource name="revisions" {...revisions} />
+        <Resource name="publishers" {...publishers} />
     </Admin>
 );
 

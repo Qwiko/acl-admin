@@ -1,12 +1,21 @@
 
-import { BulkDeleteButton, Create, Datagrid, DateField, DeleteButton, Edit, EditButton, List, ReferenceArrayInput, ReferenceField, ReferenceInput, required, SelectArrayInput, SimpleForm, TextField, TextInput, TopToolbar, useRecordContext } from 'react-admin';
+import {
+    BulkDeleteButton,
+    Button,
+    Confirm,
+    Create, Datagrid, DateField, DeleteButton, Edit, EditButton, List, ReferenceArrayInput, ReferenceField, ReferenceInput, required, SimpleForm, TextField, TextInput, TopToolbar,
+    useCreate,
+    useRecordContext
+} from 'react-admin';
 
 
 import { Show, SimpleShowLayout } from 'react-admin';
 
+import PublishIcon from '@mui/icons-material/Publish';
 
-import AddIcon from '@mui/icons-material/Add';
 
+import { useState } from 'react';
+import { useParams } from "react-router-dom";
 
 import { RevisionCompare } from './RevisionCompare';
 
@@ -62,9 +71,44 @@ export const RevisionEdit = () => {
     )
 }
 
+
+const PublishRevisionButton = () => {
+    const { id } = useParams();
+    const record = useRecordContext();
+    const [open, setOpen] = useState(false);
+
+    const [create, { isPending, error }] = useCreate(`revisions/${id}/publish`, { data: {} });
+
+    const handleClick = () => setOpen(true);
+    const handleDialogClose = () => setOpen(false);
+    const handleConfirm = () => {
+        create();
+        setOpen(false);
+    };
+
+    return (
+        <>
+            <Button label="Publish" onClick={handleClick} >
+                <PublishIcon />
+            </Button>
+            <Confirm
+                isOpen={open}
+                loading={isPending}
+                title={`Publish revision #${record && record.id}`}
+                content="Are you sure you want to publish this revision?"
+                onConfirm={handleConfirm}
+                onClose={handleDialogClose}
+            />
+        </>
+    );
+};
+
+
+
 const RevisionShowActions = () => {
     return (
         <TopToolbar>
+            <PublishRevisionButton />
             <EditButton />
             <DeleteButton mutationMode={'pessimistic'} />
         </TopToolbar>

@@ -38,6 +38,9 @@ export const RevisionCompare = () => {
     if (selectedTarget == "json_data") {
         if (revision1Data) { revision1Config = JSON.stringify(revision1Data.json_data, null, 4) }
         revision2Config = JSON.stringify(record.json_data, null, 4)
+    } else if (selectedTarget == "expanded_terms") {
+        if (revision1Data) { revision1Config = JSON.stringify(revision1Data.expanded_terms, null, 4) }
+        revision2Config = JSON.stringify(record.expanded_terms, null, 4)
     } else {
         if (revision1Data.configs) { revision1Config = revision1Data.configs.find(config => config.target_id == selectedTarget)?.config }
         revision2Config = record.configs.find(config => config.target_id == selectedTarget)?.config
@@ -117,6 +120,7 @@ export const RevisionCompare = () => {
                     fullWidth
                 >
                     <MenuItem key="json_data" value="json_data">JSON Data</MenuItem>
+                    <MenuItem key="expanded_terms" value="expanded_terms">Terms</MenuItem>
                     {targets.map((target) => (
                         <MenuItem key={target.id} value={target.id}>
                             {target.name}

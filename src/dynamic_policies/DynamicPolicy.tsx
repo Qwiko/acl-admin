@@ -1,5 +1,5 @@
 
-import { AutocompleteArrayInput, ChipField, BulkDeleteButton, Button, Create, Datagrid, DateField, DeleteButton, Edit, EditButton, Link, List, ReferenceArrayField, ReferenceArrayInput, ReferenceField, required, SelectField, SelectInput, Show, ShowButton, SimpleForm, SimpleShowLayout, TextField, TextInput, TopToolbar, useDataProvider, useNotify, useRefresh, useRecordContext, SingleFieldList } from 'react-admin';
+import { CloneButton, AutocompleteArrayInput, ChipField, BulkDeleteButton, Button, Create, Datagrid, DateField, DeleteButton, Edit, EditButton, Link, List, ReferenceArrayField, ReferenceArrayInput, ReferenceField, required, SelectField, SelectInput, Show, ShowButton, SimpleForm, SimpleShowLayout, TextField, TextInput, TopToolbar, useDataProvider, useNotify, useRefresh, useRecordContext, SingleFieldList } from 'react-admin';
 import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
 
 import AddIcon from '@mui/icons-material/Add';
@@ -105,6 +105,7 @@ const DynamicPolicyShowActions = () => {
             >
                 <HistoryIcon />
             </Button>
+            <CloneButton />
             <EditButton />
             <DeleteButton mutationMode="pessimistic" />
         </TopToolbar>

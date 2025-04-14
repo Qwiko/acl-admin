@@ -5,13 +5,14 @@ import {
     Confirm,
     Create, Datagrid, DateField, DeleteButton, Edit, EditButton, List, ReferenceArrayInput, ReferenceField, ReferenceInput, required, SimpleForm, TextField, TextInput, TopToolbar,
     useCreate,
-    useRecordContext
+    useRecordContext,
+    useRedirect
 } from 'react-admin';
 
 
-import { Show, SimpleShowLayout } from 'react-admin';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
-import PublishIcon from '@mui/icons-material/Publish';
+import { Show, SimpleShowLayout } from 'react-admin';
 
 
 import { useState } from 'react';
@@ -70,14 +71,25 @@ export const RevisionEdit = () => {
         </Edit>
     )
 }
+import { useNavigate } from 'react-router-dom';
 
-
-const PublishRevisionButton = () => {
+const DeployRevisionButton = () => {
     const { id } = useParams();
     const record = useRecordContext();
     const [open, setOpen] = useState(false);
+    const navigate = useNavigate();
+    const [create, { isPending, error }] = useCreate(`revisions/${id}/deploy`, { data: { id: null } }, {
+        onSuccess: (deploys) => {
+            console.log("Deploy success");
 
-    const [create, { isPending, error }] = useCreate(`revisions/${id}/publish`, { data: { id: null } });
+            navigate({
+                pathname: '/deployments',
+                search: `displayedFilters=${encodeURIComponent(JSON.stringify({ "id__in": true }))}&filter=${encodeURIComponent(JSON.stringify({ "id__in": deploys.deployment_ids.map(String) }))}`,
+            });
+
+        }
+    }
+    );
 
     const handleClick = () => setOpen(true);
     const handleDialogClose = () => setOpen(false);
@@ -88,14 +100,14 @@ const PublishRevisionButton = () => {
 
     return (
         <>
-            <Button label="Publish" onClick={handleClick} >
-                <PublishIcon />
+            <Button label="Deploy" onClick={handleClick} >
+                <RocketLaunchIcon />
             </Button>
             <Confirm
                 isOpen={open}
                 loading={isPending}
-                title={`Publish revision #${record && record.id}`}
-                content="Are you sure you want to publish this revision?"
+                title={`Deploy revision #${record && record.id}`}
+                content="Are you sure you want to deploy this revision?"
                 onConfirm={handleConfirm}
                 onClose={handleDialogClose}
             />
@@ -108,7 +120,7 @@ const PublishRevisionButton = () => {
 const RevisionShowActions = () => {
     return (
         <TopToolbar>
-            <PublishRevisionButton />
+            <DeployRevisionButton />
             <EditButton />
             <DeleteButton mutationMode={'pessimistic'} />
         </TopToolbar>

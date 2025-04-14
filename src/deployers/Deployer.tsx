@@ -10,20 +10,20 @@ import { useParams } from 'react-router-dom';
 import { DeleteButton, TopToolbar } from 'react-admin';
 import { List } from 'react-admin';
 
-const PublisherFilters = [
+const DeployerFilters = [
     <TextInput label="Search" source="q" alwaysOn />,
 ];
 
 
-const PublisherBulkActionButtons = () => (
+const DeployerBulkActionButtons = () => (
     <>
         <BulkDeleteButton mutationMode='pessimistic' />
     </>
 );
 
-export const PublisherList = () => (
-    <List filters={PublisherFilters}>
-        <Datagrid bulkActionButtons={<PublisherBulkActionButtons />}>
+export const DeployerList = () => (
+    <List filters={DeployerFilters}>
+        <Datagrid bulkActionButtons={<DeployerBulkActionButtons />}>
             <TextField source="name" />
             <DateField source="created_at" />
             <DateField source="updated_at" />
@@ -33,7 +33,7 @@ export const PublisherList = () => (
     </List>
 );
 
-export const PublisherCreate = () => (
+export const DeployerCreate = () => (
     <Create redirect="show">
         <SimpleForm>
             <TextInput source="name" validate={required()} />
@@ -43,7 +43,7 @@ export const PublisherCreate = () => (
     </Create>
 );
 
-export const PublisherEdit = () => (
+export const DeployerEdit = () => (
     <Edit redirect="show" mutationMode='pessimistic'>
         <SimpleForm>
             <TextInput source="name" validate={required()} />
@@ -54,7 +54,7 @@ export const PublisherEdit = () => (
 
 
 
-const PublisherShowActions = () => {
+const DeployerShowActions = () => {
     return (
         <TopToolbar>
             <EditButton />
@@ -64,12 +64,12 @@ const PublisherShowActions = () => {
 }
 
 
-export const PublisherShow = () => {
+export const DeployerShow = () => {
     return (
-        <Show actions={<PublisherShowActions />}>
+        <Show actions={<DeployerShowActions />}>
             <SimpleShowLayout >
                 <TextField source="name" />
-                
+
             </SimpleShowLayout>
             <SimpleShowLayout direction="row">
                 <DateField source="created_at" />

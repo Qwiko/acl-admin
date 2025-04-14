@@ -7,7 +7,8 @@ import dataProvider from './dataProvider';
 import dynamic_policies from './dynamic_policies';
 import networks from './networks';
 import policies from './policies';
-import publishers from './publishers';
+import deployers from './deployers';
+import deployments from './deployments';
 import revisions from './revisions';
 import services from './services';
 import targets from './targets';
@@ -27,6 +28,7 @@ export const App = () => (
         dataProvider={dataProvider(apiUrl)}
     >
         <Resource name="targets" {...targets} />
+        <Resource name="deployers" {...deployers} />
         <Resource name="networks" {...networks} >
             <Route path=":id/addresses/create" element={<NetworkAddressCreate />} />
             <Route path=":id/addresses/:addressId" element={<NetworkAddressEdit />} />
@@ -50,7 +52,7 @@ export const App = () => (
             <Route path=":id/terms/:addressId" element={<PolicyTermEdit />} />
         </Resource>
         <Resource name="revisions" {...revisions} />
-        <Resource name="publishers" {...publishers} />
+        <Resource name="deployments" {...deployments} />
     </Admin>
 );
 

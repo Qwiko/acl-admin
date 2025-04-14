@@ -77,7 +77,7 @@ const PublishRevisionButton = () => {
     const record = useRecordContext();
     const [open, setOpen] = useState(false);
 
-    const [create, { isPending, error }] = useCreate(`revisions/${id}/publish`, { data: {} });
+    const [create, { isPending, error }] = useCreate(`revisions/${id}/publish`, { data: { id: null } });
 
     const handleClick = () => setOpen(true);
     const handleDialogClose = () => setOpen(false);

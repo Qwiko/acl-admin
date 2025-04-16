@@ -23,7 +23,7 @@ const TargetBulkActionButtons = () => (
 );
 
 export const TargetList = () => (
-    <List filters={TargetFilters}>
+    <List filters={TargetFilters} pagination={<DefaultPagination />} >
         <Datagrid bulkActionButtons={<TargetBulkActionButtons />}>
             <TextField source="name" />
             <ReferenceField source="generator" reference='target_generators' />
@@ -93,6 +93,7 @@ import { useParams } from 'react-router-dom';
 
 
 import { useNotify, useRefresh } from 'react-admin';
+import { DefaultPagination } from '../shared/Shared';
 export const TargetShow = () => {
     const { id } = useParams();
     const refresh = useRefresh();
@@ -122,6 +123,13 @@ export const TargetShow = () => {
             </SimpleShowLayout>
             <SimpleShowLayout>
                 <ReferenceArrayField source="policies" reference="policies" label="Connected Policies">
+                    <SingleFieldList linkType="show" >
+                        <ChipField source="name" />
+                    </SingleFieldList>
+                </ReferenceArrayField>
+            </SimpleShowLayout>
+            <SimpleShowLayout>
+                <ReferenceArrayField source="deployers" reference="deployers" label="Connected Deployers">
                     <SingleFieldList linkType="show" >
                         <ChipField source="name" />
                     </SingleFieldList>

@@ -36,7 +36,7 @@ const RevisionFilters = [
 export const RevisionList = () => {
     return (
 
-        <List filters={RevisionFilters} sort={{ field: 'created_at', order: 'DESC' }} >
+        <List filters={RevisionFilters} sort={{ field: 'created_at', order: 'DESC' }} pagination={<DefaultPagination />} >
             <Datagrid bulkActionButtons={<RevisionBulkActionButtons />}>
                 <TextField source="comment" />
                 <DateField source="created_at" />
@@ -72,6 +72,7 @@ export const RevisionEdit = () => {
     )
 }
 import { useNavigate } from 'react-router-dom';
+import { DefaultPagination } from '../shared/Shared';
 
 const DeployRevisionButton = () => {
     const { id } = useParams();

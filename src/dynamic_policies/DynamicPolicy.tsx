@@ -5,6 +5,7 @@ import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
 import AddIcon from '@mui/icons-material/Add';
 import HistoryIcon from '@mui/icons-material/History';
 import { useParams } from "react-router-dom";
+import { DefaultPagination } from '../shared/Shared';
 
 const DynamicPolicyBulkActionButtons = () => (
     <>
@@ -13,7 +14,7 @@ const DynamicPolicyBulkActionButtons = () => (
 );
 
 export const DynamicPolicyList = () => (
-    <List filters={DynamicPolicyListFilters}>
+    <List filters={DynamicPolicyListFilters} pagination={<DefaultPagination />} >
         <Datagrid bulkActionButtons={<DynamicPolicyBulkActionButtons />}>
             <TextField source="name" />
             <DateField source="created_at" />

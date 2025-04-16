@@ -18,15 +18,17 @@ const NetworkBulkActionButtons = () => (
 );
 
 
-export const NetworkList = () => (
-    <List filters={NetworkFilters} >
-        <Datagrid bulkActionButtons={<NetworkBulkActionButtons />} >
-            <TextField source="name" />
-            <DateField source="created_at" />
-            <DateField source="updated_at" />
-        </Datagrid>
-    </List>
-);
+export const NetworkList = () => {
+    return (
+        <List filters={NetworkFilters} pagination={<DefaultPagination />}>
+            <Datagrid bulkActionButtons={<NetworkBulkActionButtons />}>
+                <TextField source="name" />
+                <DateField source="created_at" />
+                <DateField source="updated_at" />
+            </Datagrid>
+        </List>
+    );
+};
 
 export const NetworkEdit = () => (
     <Edit redirect="show">
@@ -140,6 +142,7 @@ const NetworkUsageReferences = () => {
 
 import { useNotify, useRefresh } from 'react-admin';
 import { Tooltip } from '@mui/material';
+import { DefaultPagination } from '../shared/Shared';
 
 export const NetworkShow = () => {
     const { id } = useParams();

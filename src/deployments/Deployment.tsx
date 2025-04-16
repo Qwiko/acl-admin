@@ -4,7 +4,7 @@ import { BulkDeleteButton, ChipField, Create, Datagrid, DateField, Edit, EditBut
 
 import { ReferenceField, ReferenceInput, Show, ShowButton, SimpleShowLayout } from 'react-admin';
 
-
+import { DefaultPagination } from '../shared/Shared';
 import { useNotify, useRefresh } from 'react-admin';
 import { useParams } from 'react-router-dom';
 import { DeleteButton, TopToolbar } from 'react-admin';
@@ -25,7 +25,7 @@ const DeploymentBulkActionButtons = () => (
 );
 
 export const DeploymentList = () => (
-    <List filters={DeploymentFilters}>
+    <List filters={DeploymentFilters} pagination={<DefaultPagination />} >
         <Datagrid bulkActionButtons={<DeploymentBulkActionButtons />}>
             <TextField source="id" />
             <FunctionField

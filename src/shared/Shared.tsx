@@ -1,6 +1,6 @@
 import EditIcon from '@mui/icons-material/Edit';
 import { Chip, DialogActions } from '@mui/material';
-import { BooleanField, BooleanFieldProps, ChipField, ReferenceArrayField, ReferenceArrayFieldViewProps, SingleFieldList, useRecordContext, useResourceContext } from 'react-admin';
+import { BooleanField, BooleanFieldProps, ChipField, Pagination, ReferenceArrayField, ReferenceArrayFieldViewProps, SingleFieldList, useRecordContext, useResourceContext } from 'react-admin';
 
 import { Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import React, { useState, cloneElement } from 'react';
@@ -180,3 +180,10 @@ export const ReferenceServices = (props: ReferenceArrayFieldViewProps) => {
         </SingleFieldList>
     </ReferenceArrayField>)
 };
+
+export const DefaultPagination = () => {
+    return (
+        <Pagination rowsPerPageOptions={[10, 25, 50, 75, 100]} />
+    )
+}
+

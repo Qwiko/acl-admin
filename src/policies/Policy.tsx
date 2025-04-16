@@ -9,7 +9,7 @@ import HistoryIcon from '@mui/icons-material/History';
 
 import { Stack, Typography } from '@mui/material';
 
-import { ActionChip, BulkUpdateFormButton, ColoredBooleanField, ReferenceNetworks, ReferenceServices } from '../shared/Shared';
+import { ActionChip, BulkUpdateFormButton, ColoredBooleanField, DefaultPagination, ReferenceNetworks, ReferenceServices } from '../shared/Shared';
 
 import { useParams } from "react-router-dom";
 
@@ -20,7 +20,7 @@ const PolicyBulkActionButtons = () => (
 );
 
 export const PolicyList = () => (
-    <List filters={PolicyListFilters} sort={{ field: 'name', order: 'ASC' }}>
+    <List filters={PolicyListFilters} sort={{ field: 'name', order: 'ASC' }} pagination={<DefaultPagination />} >
         <Datagrid bulkActionButtons={<PolicyBulkActionButtons />}>
             <TextField source="name" />
             <DateField source="created_at" />

@@ -4,7 +4,7 @@ import { ArrayField, Show, SimpleShowLayout, Button, ChipField, CloneButton, Cre
 
 import { useParams } from 'react-router-dom';
 
-import { ActionChip, BulkUpdateFormButton } from '../shared/Shared';
+import { ActionChip, BulkUpdateFormButton, DefaultPagination } from '../shared/Shared';
 
 import AddIcon from '@mui/icons-material/Add';
 
@@ -27,7 +27,7 @@ const TestBulkActionButtons = () => (
 
 
 export const TestList = () => (
-    <List filters={TestFilters} >
+    <List filters={TestFilters} pagination={<DefaultPagination />} >
         <Datagrid bulkActionButtons={<TestBulkActionButtons />} >
             <TextField source="name" />
             <DateField source="created_at" />

@@ -6,8 +6,20 @@ export default (apiUrl, httpClient = fetchUtils.fetchJson): DataProvider => ({
     const { page, perPage } = params.pagination || {};
     const { field, order } = params.sort || {};
 
+    // If there are lists in params filter, we need to convert them to comma separated strings
+    // to be compatible with the API
+    var flattenParamFilters = fetchUtils.flattenObject(params.filter);
+    flattenParamFilters = Object.fromEntries(
+      Object.entries(flattenParamFilters).map(([key, value]) => {
+        if (Array.isArray(value)) {
+          return [key, value.join(",")];
+        }
+        return [key, value];
+      }),
+    );
+
     const query = {
-      ...fetchUtils.flattenObject(params.filter),
+      ...flattenParamFilters,
       order_by: (order == "ASC" ? "+" : "-") + field,
       page: page ? page : undefined,
       size: perPage ? perPage : undefined,

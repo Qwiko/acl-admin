@@ -13,7 +13,7 @@ import { List } from 'react-admin';
 const DeploymentFilters = [
     <TextInput label="Search" source="q" alwaysOn />,
     <TextArrayInput source="id__in" label="IDs" />,
-    <ReferenceArrayInput source="deployer_id__in" reference='deployers' label="deployers" />,
+    <ReferenceArrayInput source="deployer_id__in" reference='deployers' label="Deployers" />,
     <ReferenceArrayInput source="revision_id__in" reference='revisions' label="Revision" />,
 ];
 
@@ -25,9 +25,8 @@ const DeploymentBulkActionButtons = () => (
 );
 
 export const DeploymentList = () => (
-    <List filters={DeploymentFilters} pagination={<DefaultPagination />} >
+    <List filters={DeploymentFilters} pagination={<DefaultPagination />} sort={{ field: 'created_at', order: 'DESC' }}>
         <Datagrid bulkActionButtons={<DeploymentBulkActionButtons />}>
-            <TextField source="id" />
             <FunctionField
                 source="status"
                 render={record => {

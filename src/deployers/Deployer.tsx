@@ -102,7 +102,7 @@ export const DeployerCreate = () => {
                             <NumberInput source="port" label="Port" />
                             <TextInput source="password" label="Password" />
 
-                            <TextInput source="ssh_key" label="SSH Key" />
+                            <TextInput source="ssh_key" multiline label="SSH Key" />
                         </>
                     }
                 </FormDataConsumer>
@@ -114,7 +114,7 @@ export const DeployerCreate = () => {
                             <NumberInput source="port" label="Port" />
                             <TextInput source="password" label="Password" />
                             <TextInput source="enable" label="Enable Password" />
-                            <TextInput source="ssh_key" label="SSH Key" />
+                            <TextInput source="ssh_key" multiline label="SSH Key" />
                         </>
                     }
                 </FormDataConsumer>
@@ -124,7 +124,7 @@ export const DeployerCreate = () => {
                             <TextInput source="repo_url" label="Repo URL" />
                             <TextInput source="branch" label="Branch" />
                             <TextInput source="folder_path" label="Folder Path" />
-                            <TextInput source="ssh_key" label="SSH Key" />
+                            <TextInput source="ssh_key" multiline label="SSH Key" />
                             <TextInput source="auth_token" label="Auth Token" />
 
                         </>

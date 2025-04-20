@@ -15,6 +15,15 @@ import { DefaultPagination } from '../shared/Shared';
 
 const DeployerFilters = [
     <TextInput label="Search" source="q" alwaysOn />,
+    <ReferenceInput source="target_id" reference='targets' resettable />,
+    <SelectInput source="mode" choices={[
+        { id: 'proxmox_nft', name: 'Proxmox Nft' },
+        { id: 'netmiko', name: 'Netmiko' },
+        { id: 'git', name: 'Git' },
+        { id: 'http', name: 'HTTP' },
+        { id: 'custom', name: 'Custom' }
+    ]} resettable />
+    // <ReferenceField source="target" reference='targets' />
 ];
 
 
@@ -28,10 +37,18 @@ export const DeployerList = () => (
     <List filters={DeployerFilters} pagination={<DefaultPagination />} >
         <Datagrid bulkActionButtons={<DeployerBulkActionButtons />}>
             <TextField source="name" />
+            <ReferenceField source="target" reference='targets' />
+            <SelectField source="mode" choices={[
+                { id: 'proxmox_nft', name: 'Proxmox Nft' },
+                { id: 'netmiko', name: 'Netmiko' },
+                { id: 'git', name: 'Git' },
+                { id: 'http', name: 'HTTP' },
+                { id: 'custom', name: 'Custom' }
+            ]} />
             <DateField source="created_at" />
             <DateField source="updated_at" />
-            <EditButton />
-            <ShowButton />
+            {/* <EditButton />
+            <ShowButton /> */}
         </Datagrid>
     </List>
 );

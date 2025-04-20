@@ -62,7 +62,6 @@ export const DeploymentList = () => (
             </ReferenceField>
             <DateField source="created_at" />
             <DateField source="updated_at" />
-            <ShowButton />
         </Datagrid>
     </List>
 );

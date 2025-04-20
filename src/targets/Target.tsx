@@ -35,8 +35,6 @@ export const TargetList = () => (
             ]} />
             <DateField source="created_at" />
             <DateField source="updated_at" />
-            <EditButton />
-            <ShowButton />
         </Datagrid>
     </List>
 );

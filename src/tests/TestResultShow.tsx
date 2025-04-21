@@ -150,7 +150,6 @@ const TestResultShowInside = () => {
                             { id: 'reject', name: 'Reject' },
                         ]} optionText={<ActionChip />} sortable={false} />
                         <ColoredBooleanField source="logging" sortable={false} />
-                        <ReferenceField source="nested_policy_id" reference="policies" sortable={false} />
                     </Datagrid>
                 </ArrayField>
             </TabbedShowLayout.Tab>

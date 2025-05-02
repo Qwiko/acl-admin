@@ -117,9 +117,9 @@ export const DeployerCreate = () => {
                             <TextInput source="host" label="Host" />
                             <TextInput source="username" label="Username" />
                             <NumberInput source="port_envvar" label="Port" />
-                            <TextInput source="password_envvar" label="Password Env var" />
 
-                            <TextInput source="ssh_key_envvar" label="SSH Key " />
+                            <TextInput source="password_envvar" label="Password Env var" />
+                            <TextInput source="ssh_key_envvar" label="SSH Key Env var" />
                         </>
                     }
                 </FormDataConsumer>
@@ -178,12 +178,28 @@ const DeployerInsideShow = () => {
     const record = useRecordContext();
     if (!record) return null;
 
-    if (record.mode == "proxmox_nft" || record.mode == "netmiko") {
+    if (record.mode == "proxmox_nft") {
         return (
             <SimpleShowLayout>
                 <TextField source="config.host" label="Host" />
                 <TextField source="config.username" label="Username" />
                 <TextField source="config.port" label="Port" />
+
+                <TextField source="config.password_envvar" label="Password Environment variable" />
+                <TextField source="config.ssh_key_envvar" label="SSH Key Environment variable" />
+            </SimpleShowLayout>
+        );
+    }
+    else if (record.mode == "netmiko") {
+        return (
+            <SimpleShowLayout>
+                <TextField source="config.host" label="Host" />
+                <TextField source="config.username" label="Username" />
+                <TextField source="config.port" label="Port" />
+
+                <TextField source="config.password_envvar" label="Password Environment variable" />
+                <TextField source="config.enable_envvar" label="Enable Environment variable" />
+                <TextField source="config.ssh_key_envvar" label="SSH Key Environment variable" />
             </SimpleShowLayout>
         );
     }
@@ -194,6 +210,7 @@ const DeployerInsideShow = () => {
                 <TextField source="config.branch" label="Branch" />
                 <TextField source="config.folder_path" label="Folder Path" />
 
+                <TextField source="config.ssh_key_envvar" label="SSH Key Environment variable" />
             </SimpleShowLayout>
         );
     }

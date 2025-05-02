@@ -67,8 +67,8 @@ export const DeployerCreate = () => {
                     host: data.host,
                     username: data.username,
                     port: data.port,
-                    password: data.password,
-                    ssh_key: data.ssh_key,
+                    password_envvar: data.password_envvar,
+                    ssh_key_envvar: data.ssh_key_envvar,
                 }
             }
         }
@@ -79,9 +79,9 @@ export const DeployerCreate = () => {
                     host: data.host,
                     username: data.username,
                     port: data.port,
-                    password: data.password,
-                    enable: data.enable,
-                    ssh_key: data.ssh_key,
+                    password_envvar: data.password_envvar,
+                    enable_envvar: data.enable_envvar,
+                    ssh_key_envvar: data.ssh_key_envvar,
                 }
             }
         }
@@ -92,8 +92,8 @@ export const DeployerCreate = () => {
                     repo_url: data.repo_url,
                     branch: data.branch,
                     folder_path: data.folder_path,
-                    ssh_key: data.ssh_key,
-                    auth_token: data.auth_token,
+                    ssh_key_envvar: data.ssh_key_envvar,
+                    auth_token_envvar: data.auth_token_envvar,
                 }
             }
         }
@@ -116,10 +116,10 @@ export const DeployerCreate = () => {
                         <><Typography variant="h6">Config</Typography>
                             <TextInput source="host" label="Host" />
                             <TextInput source="username" label="Username" />
-                            <NumberInput source="port" label="Port" />
-                            <TextInput source="password" label="Password" />
+                            <NumberInput source="port_envvar" label="Port" />
+                            <TextInput source="password_envvar" label="Password Env var" />
 
-                            <TextInput source="ssh_key" multiline label="SSH Key" />
+                            <TextInput source="ssh_key_envvar" label="SSH Key " />
                         </>
                     }
                 </FormDataConsumer>
@@ -129,9 +129,9 @@ export const DeployerCreate = () => {
                             <TextInput source="host" label="Host" />
                             <TextInput source="username" label="Username" />
                             <NumberInput source="port" label="Port" />
-                            <TextInput source="password" label="Password" />
-                            <TextInput source="enable" label="Enable Password" />
-                            <TextInput source="ssh_key" multiline label="SSH Key" />
+                            <TextInput source="password_envvar" label="Password Env var" />
+                            <TextInput source="enable_envvar" label="Enable Password Env var" />
+                            <TextInput source="ssh_key_envvar" label="SSH Key Env var" />
                         </>
                     }
                 </FormDataConsumer>
@@ -141,8 +141,8 @@ export const DeployerCreate = () => {
                             <TextInput source="repo_url" label="Repo URL" />
                             <TextInput source="branch" label="Branch" />
                             <TextInput source="folder_path" label="Folder Path" />
-                            <TextInput source="ssh_key" multiline label="SSH Key" />
-                            <TextInput source="auth_token" label="Auth Token" />
+                            <TextInput source="ssh_key_envvar" label="SSH Key Env var" />
+                            <TextInput source="auth_token_envvar" label="Auth Token " />
 
                         </>
                     }

@@ -94,7 +94,7 @@ const TestResultShowInside = () => {
 
         dataProvider.customFetch({
             method: "GET",
-            url: `/run_tests?${resource?.replace(/ies$/, 'y_id')}=${id}`,
+            url: `/run_tests?${resource?.replace(/ies$/, 'y_id')}=${id}`, // ?dynamic_policy_id= or ?policy_id=
         })
             .then(({ json }) => setTests(json))
     }, [id, dataProvider]);
@@ -102,6 +102,9 @@ const TestResultShowInside = () => {
     return (
         <TabbedShowLayout record={tests} syncWithLocation={false} sx={{ [`& .RaTabbedShowLayout-content`]: { padding: "0px" }, px: 0 }}>
             <TabbedShowLayout.Tab label={`Tests (${tests.tests.length})`}>
+                <SimpleShowLayout sx={{ paddingBottom: 0 }}>
+                    <FunctionField label="Test Coverage" source="coverage" render={record => `${record.coverage * 100} %`} />
+                </SimpleShowLayout>
                 <ArrayField source="tests" label="" >
                     <Datagrid bulkActionButtons={false} rowClick="expand" empty={<CustomTestEmpty />} expand={<TestExpandPanel />}>
                         <TextField source="case.name" />

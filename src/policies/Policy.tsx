@@ -7,11 +7,11 @@ import AddIcon from '@mui/icons-material/Add';
 import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
 import HistoryIcon from '@mui/icons-material/History';
 
-import { Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 
 import { ActionChip, BulkUpdateFormButton, ColoredBooleanField, DefaultPagination, ReferenceNetworks, ReferenceServices } from '../shared/Shared';
 
-import { useParams } from "react-router-dom";
+import { data, useParams } from "react-router-dom";
 
 const PolicyBulkActionButtons = () => (
     <>
@@ -254,91 +254,204 @@ export const PolicyShow = () => {
 
 export const PolicyTermCreate = () => {
     const { id } = useParams();
+    const transform = data => {
+        // Calculate the position based on the selected relative position
+        if (data.relative_position === 'below') {
+            data.position = data.position + 1;
+        }
+        // Remove the relative_position field from the data
+        delete data.relative_position;
+
+        return {
+            ...data,
+        }
+    };
     return (
-        <Create resource={"policies/" + id + "/terms"} redirect={"/policies/" + id + "/show"}>
-            <SimpleForm>
+        <Create transform={transform} resource={"policies/" + id + "/terms"} redirect={"/policies/" + id + "/show"}>
+            <SimpleForm sx={{ maxWidth: 500 }}>
                 <TextInput source="name" validate={required()} />
 
-                <Typography variant="h6">Insert above term</Typography>
-                <ReferenceInput source="position" reference={"policies/" + id + "/terms"} id='position' sort={{ field: 'position', order: 'ASC' }}>
-                    <SelectInput optionText="name" optionValue="position" />
-                </ReferenceInput>
 
-                <BooleanInput source="enabled" />
+                <Typography variant="h6" gutterBottom>
+                    Position
+                </Typography>
+                <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
+                    <Box flex={0.5} mr={{ xs: 0, sm: '0.5em' }}>
+                        <SelectInput source="relative_position" choices={[
+                            { id: 'above', name: 'Above' },
+                            { id: 'below', name: 'Below' },
+                        ]} defaultValue='above' label="Relative Position" validate={required()} />
+                    </Box>
+                    <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
+                        <ReferenceInput source="position" reference={"policies/" + id + "/terms"} id='position' sort={{ field: 'position', order: 'ASC' }}>
+                            <SelectInput optionText="name" optionValue="position" />
+                        </ReferenceInput>
+                    </Box>
+                </Box>
 
-                <ReferenceArrayInput source="source_networks" reference="networks" options={{ fullWidth: true }} />
-                <BooleanInput source="negate_source_networks" fullWidth />
+                <Typography variant="h6" gutterBottom>
+                    Networks
+                </Typography>
+                <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
+                    <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
+                        <ReferenceArrayInput source="source_networks" reference="networks" options={{ fullWidth: true }} />
+                    </Box>
+                    <Box flex={0.2} ml={{ xs: 0, sm: '0.5em' }}>
+                        <BooleanInput source="negate_source_networks" fullWidth />
+                    </Box>
+                </Box>
 
-                <ReferenceArrayInput source="destination_networks" reference="networks" />
-                <BooleanInput source="negate_destination_networks" />
+                <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
+                    <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
+                        <ReferenceArrayInput source="destination_networks" reference="networks" />
+                    </Box>
+                    <Box flex={0.2} ml={{ xs: 0, sm: '0.5em' }}>
+                        <BooleanInput source="negate_destination_networks" />
+                    </Box>
+                </Box>
 
+                <Typography variant="h6" gutterBottom>
+                    Services
+                </Typography>
                 <ReferenceArrayInput source="source_services" reference="services" />
                 <ReferenceArrayInput source="destination_services" reference="services" />
 
-                <SelectInput source="option" choices={[
-                    { id: 'established', name: 'Established' },
-                    { id: 'is-fragment', name: 'Is Fragment' },
-                    { id: 'tcp-established', name: 'TCP Established' },
-                    { id: 'tcp-initial', name: 'TCP Initial' }
-                ]} resettable />
+                <Typography variant="h6" gutterBottom>
+                    Options
+                </Typography>
+                <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
+                    <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
+                        <SelectInput source="option" choices={[
+                            { id: 'established', name: 'Established' },
+                            { id: 'is-fragment', name: 'Is Fragment' },
+                            { id: 'tcp-established', name: 'TCP Established' },
+                            { id: 'tcp-initial', name: 'TCP Initial' }
+                        ]} resettable />
+                    </Box>
+                    <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
 
-                <SelectInput source="action" choices={[
-                    { id: 'accept', name: 'Accept' },
-                    { id: 'deny', name: 'Deny' },
-                    { id: 'reject', name: 'Reject' },
-                ]} optionText={<ActionChip />} resettable />
-                <BooleanInput source="logging" />
+                        <SelectInput source="action" choices={[
+                            { id: 'accept', name: 'Accept' },
+                            { id: 'deny', name: 'Deny' },
+                            { id: 'reject', name: 'Reject' },
+                        ]} optionText={<ActionChip />} resettable />
+                    </Box>
+                </Box>
+                <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
+                    <BooleanInput source="enabled" />
+                    <BooleanInput source="logging" />
+                </Box>
 
-
+                <Typography variant="h6" gutterBottom>
+                    Nested Policy
+                </Typography>
                 <ReferenceInput source="nested_policy_id" reference="policies" />
             </SimpleForm>
-        </Create>
+        </Create >
     );
 }
 
 export const PolicyTermEdit = () => {
     const { id, addressId } = useParams();
+    const transform = data => {
+        // Calculate the position based on the selected relative position
+        if (data.relative_position === 'below') {
+            data.position = data.position + 1;
+        }
+        // Remove the relative_position field from the data
+        delete data.relative_position;
 
+        return {
+            ...data,
+        }
+    };
     return (
-        <Edit resource={"policies/" + id + "/terms"} id={addressId} redirect={"/policies/" + id + "/show"} mutationMode='pessimistic'>
-            <SimpleForm>
+        <Edit transform={transform} resource={"policies/" + id + "/terms"} id={addressId} redirect={"/policies/" + id + "/show"} mutationMode='pessimistic'>
+            <SimpleForm sx={{ maxWidth: 500 }}>
                 <TextInput source="name" validate={required()} />
 
                 <BooleanInput source="move" />
 
                 <FormDataConsumer<{ move: boolean }>>
                     {({ formData }) => formData.move &&
-                        <><Typography variant="h6">Move above term</Typography>
-                            <ReferenceInput source="position" reference={"policies/" + id + "/terms"} id='position' sort={{ field: 'position', order: 'ASC' }}>
-                                <SelectInput optionText="name" optionValue="position" />
-                            </ReferenceInput>
+                        <>
+                            <Typography variant="h6" gutterBottom>
+                                Position
+                            </Typography>
+                            <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
+                                <Box flex={0.5} mr={{ xs: 0, sm: '0.5em' }}>
+                                    <SelectInput source="relative_position" choices={[
+                                        { id: 'above', name: 'Above' },
+                                        { id: 'below', name: 'Below' },
+                                    ]} defaultValue='above' label="Relative Position" validate={required()} />
+                                </Box>
+                                <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
+                                    <ReferenceInput source="position" reference={"policies/" + id + "/terms"} id='position' sort={{ field: 'position', order: 'ASC' }}>
+                                        <SelectInput optionText="name" optionValue="position" />
+                                    </ReferenceInput>
+                                </Box>
+                            </Box>
                         </>
                     }
                 </FormDataConsumer>
 
-                <BooleanInput source="enabled" />
 
-                <ReferenceArrayInput source="source_networks" reference="networks" />
-                <BooleanInput source="negate_source_networks" fullWidth />
+                <Typography variant="h6" gutterBottom>
+                    Networks
+                </Typography>
+                <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
+                    <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
+                        <ReferenceArrayInput source="source_networks" reference="networks" options={{ fullWidth: true }} />
+                    </Box>
+                    <Box flex={0.2} ml={{ xs: 0, sm: '0.5em' }}>
+                        <BooleanInput source="negate_source_networks" fullWidth />
+                    </Box>
+                </Box>
 
-                <ReferenceArrayInput source="destination_networks" reference="networks" />
-                <BooleanInput source="negate_destination_networks" />
+                <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
+                    <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
+                        <ReferenceArrayInput source="destination_networks" reference="networks" />
+                    </Box>
+                    <Box flex={0.2} ml={{ xs: 0, sm: '0.5em' }}>
+                        <BooleanInput source="negate_destination_networks" />
+                    </Box>
+                </Box>
+
+                <Typography variant="h6" gutterBottom>
+                    Services
+                </Typography>
                 <ReferenceArrayInput source="source_services" reference="services" />
                 <ReferenceArrayInput source="destination_services" reference="services" />
 
-                <SelectInput source="option" choices={[
-                    { id: 'established', name: 'Established' },
-                    { id: 'is-fragment', name: 'Is Fragment' },
-                    { id: 'tcp-established', name: 'TCP Established' },
-                    { id: 'tcp-initial', name: 'TCP Initial' }
-                ]} resettable />
+                <Typography variant="h6" gutterBottom>
+                    Options
+                </Typography>
+                <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
+                    <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
+                        <SelectInput source="option" choices={[
+                            { id: 'established', name: 'Established' },
+                            { id: 'is-fragment', name: 'Is Fragment' },
+                            { id: 'tcp-established', name: 'TCP Established' },
+                            { id: 'tcp-initial', name: 'TCP Initial' }
+                        ]} resettable />
+                    </Box>
+                    <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
 
-                <SelectInput source="action" choices={[
-                    { id: 'accept', name: 'Accept' },
-                    { id: 'deny', name: 'Deny' },
-                    { id: 'reject', name: 'Reject' },
-                ]} resettable />
-                <BooleanInput source="logging" />
+                        <SelectInput source="action" choices={[
+                            { id: 'accept', name: 'Accept' },
+                            { id: 'deny', name: 'Deny' },
+                            { id: 'reject', name: 'Reject' },
+                        ]} optionText={<ActionChip />} resettable />
+                    </Box>
+                </Box>
+                <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
+                    <BooleanInput source="enabled" />
+                    <BooleanInput source="logging" />
+                </Box>
+
+                <Typography variant="h6" gutterBottom>
+                    Nested Policy
+                </Typography>
                 <ReferenceInput source="nested_policy_id" reference="policies" />
             </SimpleForm>
         </Edit>

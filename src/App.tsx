@@ -3,6 +3,8 @@ import { Admin, Resource } from 'react-admin';
 import { Route } from 'react-router-dom';
 import { Layout } from './Layout';
 import dataProvider from './dataProvider';
+import authProvider from './authProvider';
+import { fetchUtils } from "ra-core";
 
 import dynamic_policies from './dynamic_policies';
 import networks from './networks';
@@ -22,10 +24,20 @@ import { TestResultShow } from './tests/TestResultShow';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
+const httpClient = (url, options = {}) => {
+    if (!options.headers) {
+        options.headers = new Headers({ Accept: 'application/json' });
+    }
+    const { access_token } = JSON.parse(localStorage.getItem('auth'));
+    options.headers.set('Authorization', `Bearer ${access_token}`);
+    return fetchUtils.fetchJson(url, options);
+};
+
 export const App = () => (
     <Admin
         layout={Layout}
-        dataProvider={dataProvider(apiUrl)}
+        authProvider={authProvider}
+        dataProvider={dataProvider(apiUrl, httpClient)}
     >
         <Resource name="targets" {...targets} />
         <Resource name="deployers" {...deployers} />

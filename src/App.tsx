@@ -16,10 +16,6 @@ import services from './services';
 import targets from './targets';
 import tests from './tests';
 
-import { NetworkAddressCreate, NetworkAddressEdit } from './networks/Network';
-import { PolicyTermCreate, PolicyTermEdit } from './policies/Policy';
-import { ServiceEntryCreate, ServiceEntryEdit } from './services/Service';
-import { TestCaseCreate, TestCaseEdit } from './tests/Test';
 import { TestResultShow } from './tests/TestResultShow';
 
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -41,18 +37,9 @@ export const App = () => (
     >
         <Resource name="targets" {...targets} />
         <Resource name="deployers" {...deployers} />
-        <Resource name="networks" {...networks} >
-            <Route path=":id/addresses/create" element={<NetworkAddressCreate />} />
-            <Route path=":id/addresses/:addressId" element={<NetworkAddressEdit />} />
-        </Resource>
-        <Resource name="services" {...services} >
-            <Route path=":id/entries/create" element={<ServiceEntryCreate />} />
-            <Route path=":id/entries/:addressId" element={<ServiceEntryEdit />} />
-        </Resource>
-        <Resource name="tests" {...tests} >
-            <Route path=":id/cases/create" element={<TestCaseCreate />} />
-            <Route path=":id/cases/:caseId" element={<TestCaseEdit />} />
-        </Resource>
+        <Resource name="networks" {...networks} />
+        <Resource name="services" {...services} />
+        <Resource name="tests" {...tests} />
         <Resource name="dynamic_policies" {...dynamic_policies} >
             <Route path=":id/test" element={<TestResultShow />} />
             <Route path=":id/test/not_matched" element={<TestResultShow />} />
@@ -60,8 +47,6 @@ export const App = () => (
         <Resource name="policies" {...policies} >
             <Route path=":id/test" element={<TestResultShow />} />
             <Route path=":id/test/not_matched" element={<TestResultShow />} />
-            <Route path=":id/terms/create" element={<PolicyTermCreate />} />
-            <Route path=":id/terms/:addressId" element={<PolicyTermEdit />} />
         </Resource>
         <Resource name="revisions" {...revisions} />
         <Resource name="deployments" {...deployments} />

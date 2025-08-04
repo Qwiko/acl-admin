@@ -40,7 +40,7 @@ const authProvider: AuthProvider = {
     localStorage.getItem("auth") ? Promise.resolve() : Promise.reject(),
   checkError: (error) => {
     const status = error.status;
-    if (status === 401 || status === 403) {
+    if (status === 401) {
       localStorage.removeItem("auth");
       return Promise.reject();
     }

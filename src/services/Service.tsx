@@ -1,6 +1,11 @@
 
-import { BulkDeleteButton, ChipField, CloneButton, Create, Datagrid, DateField, Edit, EditButton, Link, required, SimpleForm, SingleFieldList, TextField, TextInput } from 'react-admin';
+import { ArrayInput, SimpleFormIterator, BulkDeleteButton, ChipField, CloneButton, Create, Datagrid, DateField, Edit, EditButton, Link, required, SimpleForm, SingleFieldList, TextField, TextInput } from 'react-admin';
 
+import { DeleteButton, TopToolbar } from 'react-admin';
+import { ReferenceArrayField, useDataProvider } from 'react-admin';
+import { Tooltip } from '@mui/material';
+import { useNotify, useRefresh } from 'react-admin';
+import { useEffect, useState } from 'react';
 
 import { ArrayField, ReferenceField, ReferenceInput, Show, SimpleShowLayout } from 'react-admin';
 
@@ -37,6 +42,13 @@ export const ServiceEdit = () => (
     <Edit redirect="show" mutationMode='pessimistic'>
         <SimpleForm>
             <TextInput source="name" validate={required()} />
+            <ArrayInput source="entries">
+                <SimpleFormIterator inline>
+                    <TextInput source="protocol" />
+                    <TextInput source="port" />
+                    <ReferenceInput source="nested_service_id" reference="services" />
+                </SimpleFormIterator>
+            </ArrayInput>
         </SimpleForm>
     </Edit>
 );
@@ -45,11 +57,17 @@ export const ServiceCreate = () => (
     <Create redirect="show">
         <SimpleForm>
             <TextInput source="name" validate={required()} />
+            <ArrayInput source="entries">
+                <SimpleFormIterator inline>
+                    <TextInput source="protocol" />
+                    <TextInput source="port" />
+                    <ReferenceInput source="nested_service_id" reference="services" />
+                </SimpleFormIterator>
+            </ArrayInput>
         </SimpleForm>
     </Create>
 );
 
-import { DeleteButton, TopToolbar } from 'react-admin';
 
 const ServiceShowActions = () => {
     return (
@@ -61,22 +79,7 @@ const ServiceShowActions = () => {
 }
 
 
-export const ServiceEntryCreate = () => {
-    const { id } = useParams();
-    return (
-        <Create resource={"services/" + id + "/entries"} redirect={"/services/" + id + "/show"}>
-            <SimpleForm>
-                <TextInput source="protocol" />
-                <TextInput source="port" />
-                <ReferenceInput source="nested_service_id" reference="services" />
-            </SimpleForm>
-        </Create>
-    );
-}
 
-import { ReferenceArrayField, useDataProvider } from 'react-admin';
-
-import { useEffect, useState } from 'react';
 
 const ServiceUsageReferences = () => {
     const { id } = useParams();
@@ -126,8 +129,7 @@ const ServiceUsageReferences = () => {
 };
 
 
-import { Tooltip } from '@mui/material';
-import { useNotify, useRefresh } from 'react-admin';
+
 export const ServiceShow = () => {
     const { id } = useParams();
     const refresh = useRefresh();
@@ -145,28 +147,10 @@ export const ServiceShow = () => {
 
             <SimpleShowLayout >
                 <ArrayField source="entries">
-
-                    <Button
-                        component={Link}
-                        to={`/services/${id}/entries/create`}
-                        startIcon={<AddIcon />}
-                        label="Add Entry"
-                    >
-                        <AddIcon />
-                    </Button>
                     <Datagrid bulkActionButtons={false} rowClick={false}>
                         <TextField source="protocol" />
                         <TextField source="port" />
                         <ReferenceField source="nested_service_id" reference="services" />
-                        <Tooltip title="Edit">
-                            <EditButton resource={"services/" + id + "/entries"} label='' size="large" />
-                        </Tooltip>
-                        <Tooltip title="Clone">
-                            <CloneButton resource={"services/" + id + "/entries"} label='' size="large" />
-                        </Tooltip>
-                        <Tooltip title="Delete">
-                            <DeleteButton resource={"services/" + id + "/entries"} label='' size="large" mutationMode="pessimistic" redirect={"/services/" + id + "/show"} mutationOptions={{ onSuccess: () => { refresh(); notify('Service address deleted') } }} />
-                        </Tooltip>
                     </Datagrid>
                 </ArrayField>
             </SimpleShowLayout>
@@ -180,15 +164,15 @@ export const ServiceShow = () => {
 }
 
 
-export const ServiceEntryEdit = () => {
-    const { id, addressId } = useParams();
-    return (
-        <Edit resource={"services/" + id + "/entries"} id={addressId} redirect={"/services/" + id + "/show"} mutationMode='pessimistic'>
-            <SimpleForm>
-                <TextInput source="protocol" />
-                <TextInput source="port" />
-                <ReferenceInput source="nested_service_id" reference="services" />
-            </SimpleForm>
-        </Edit >
-    );
-};
+// export const ServiceEntryEdit = () => {
+//     const { id, addressId } = useParams();
+//     return (
+//         <Edit resource={"services/" + id + "/entries"} id={addressId} redirect={"/services/" + id + "/show"} mutationMode='pessimistic'>
+//             <SimpleForm>
+//                 <TextInput source="protocol" />
+//                 <TextInput source="port" />
+//                 <ReferenceInput source="nested_service_id" reference="services" />
+//             </SimpleForm>
+//         </Edit >
+//     );
+// };

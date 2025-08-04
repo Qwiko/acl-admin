@@ -1,5 +1,5 @@
 
-import { Button, CloneButton, Create, SingleFieldList, ChipField, CreateButton, Datagrid, DateField, Edit, EditButton, Link, ReferenceArrayField, ReferenceInput, required, ShowButton, SimpleForm, TextField, TextInput } from 'react-admin';
+import { ArrayInput, SimpleFormIterator, Button, CloneButton, Create, SingleFieldList, ChipField, CreateButton, Datagrid, DateField, Edit, EditButton, Link, ReferenceArrayField, ReferenceInput, required, ShowButton, SimpleForm, TextField, TextInput } from 'react-admin';
 
 
 import { BulkDeleteButton, List } from 'react-admin';
@@ -31,9 +31,16 @@ export const NetworkList = () => {
 };
 
 export const NetworkEdit = () => (
-    <Edit redirect="show">
+    <Edit redirect="show" mutationMode='pessimistic'>
         <SimpleForm>
             <TextInput source="name" validate={required()} />
+            <ArrayInput source="addresses">
+                <SimpleFormIterator inline>
+                    <TextInput source="address" />
+                    <TextInput source="comment" />
+                    <ReferenceInput source="nested_network_id" reference="networks" />
+                </SimpleFormIterator>
+            </ArrayInput>
         </SimpleForm>
     </Edit>
 );
@@ -42,6 +49,13 @@ export const NetworkCreate = () => (
     <Create redirect="show">
         <SimpleForm>
             <TextInput source="name" validate={required()} />
+            <ArrayInput source="addresses">
+                <SimpleFormIterator inline>
+                    <TextInput source="address" />
+                    <TextInput source="comment" />
+                    <ReferenceInput source="nested_network_id" reference="networks" />
+                </SimpleFormIterator>
+            </ArrayInput>
         </SimpleForm>
     </Create>
 );
@@ -62,23 +76,8 @@ import { ArrayField, ReferenceField, Show, SimpleShowLayout, } from 'react-admin
 
 import { useParams } from 'react-router-dom';
 
-
 import { useRedirect } from 'react-admin';
 
-
-
-export const NetworkAddressCreate = () => {
-    const { id } = useParams();
-    return (
-        <Create resource={"networks/" + id + "/addresses"} redirect={"/networks/" + id + "/show"}>
-            <SimpleForm>
-                <TextInput source="address" />
-                <TextInput source="comment" />
-                <ReferenceInput source="nested_network_id" reference="networks" />
-            </SimpleForm>
-        </Create>
-    );
-}
 
 import { useDataProvider } from 'react-admin';
 
@@ -157,27 +156,10 @@ export const NetworkShow = () => {
 
                 <ArrayField source="addresses">
 
-                    <Button
-                        component={Link}
-                        to={`/networks/${id}/addresses/create`}
-                        startIcon={<AddIcon />}
-                        label="Add Address"
-                    >
-                        <AddIcon />
-                    </Button>
                     <Datagrid bulkActionButtons={false} rowClick={false}>
                         <TextField source="address" />
                         <TextField source="comment" />
                         <ReferenceField source="nested_network_id" reference="networks" />
-                        <Tooltip title="Edit">
-                            <EditButton resource={"networks/" + id + "/addresses"} label='' size="large" />
-                        </Tooltip>
-                        <Tooltip title="Clone">
-                            <CloneButton resource={"networks/" + id + "/addresses"} label='' size="large" />
-                        </Tooltip>
-                        <Tooltip title="Delete">
-                            <DeleteButton resource={"networks/" + id + "/addresses"} label='' size="large" mutationMode="pessimistic" redirect={"/networks/" + id + "/show"} mutationOptions={{ onSuccess: () => { refresh(); notify('Network address deleted') } }} />
-                        </Tooltip>
                     </Datagrid>
                 </ArrayField>
 
@@ -189,17 +171,3 @@ export const NetworkShow = () => {
         </Show >
     );
 }
-
-
-export const NetworkAddressEdit = () => {
-    const { id, addressId } = useParams();
-    return (
-        <Edit resource={"networks/" + id + "/addresses"} id={addressId} redirect={"/networks/" + id + "/show"} mutationMode='pessimistic'>
-            <SimpleForm>
-                <TextInput source="address" />
-                <TextInput source="comment" />
-                <ReferenceInput source="nested_network_id" reference="networks" />
-            </SimpleForm>
-        </Edit>
-    );
-};

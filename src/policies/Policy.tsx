@@ -1,11 +1,12 @@
 
-import { ArrayField, ArrayInput, AutocompleteArrayInput, AutocompleteInput, BooleanInput, BulkDeleteButton, Button, ButtonProps, ChipField, Create, Datagrid, DateField, DeleteButton, Edit, EditButton, Form, IconButtonWithTooltip, InfiniteList, Link, ReferenceArrayField, ReferenceArrayInput, ReferenceField, ReferenceInput, required, SelectField, SelectInput, Show, ShowButton, SimpleForm, SimpleFormIterator, SimpleShowLayout, SingleFieldList, TextField, TextInput, TopToolbar, useDataProvider, useNotify, useRefresh, useSimpleFormIterator } from 'react-admin';
-
 import AddIcon from '@mui/icons-material/Add';
+import CancelIcon from '@mui/icons-material/Cancel';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
 import HistoryIcon from '@mui/icons-material/History';
-import { Box, Typography } from "@mui/material";
+import { Box, Tooltip, Typography } from "@mui/material";
 import React, { useEffect, useState } from 'react';
+import { ArrayField, ArrayInput, AutocompleteArrayInput, AutocompleteInput, BooleanInput, BulkDeleteButton, Button, ButtonProps, ChipField, Create, Datagrid, DateField, DeleteButton, Edit, EditButton, Form, IconButtonWithTooltip, InfiniteList, Link, ReferenceArrayField, ReferenceArrayInput, ReferenceField, ReferenceInput, required, SelectField, SelectInput, Show, ShowButton, SimpleForm, SimpleFormIterator, SimpleShowLayout, SingleFieldList, TextField, TextInput, TopToolbar, useDataProvider, useNotify, useRefresh, useSimpleFormIterator } from 'react-admin';
 
 import { ActionChip, ColoredBooleanField, DefaultPagination, ReferenceNetworks, ReferenceServices } from '../shared/Shared';
 
@@ -40,7 +41,7 @@ import {
     FormDataConsumer,
     useSourceContext
 } from "react-admin";
-import { useFormContext, useFormState } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 
 const RowEditButton = React.forwardRef<HTMLButtonElement, { onClick: () => void }>(
     ({ onClick }, ref) => (
@@ -75,15 +76,12 @@ const TermsAddButton = (props: ButtonProps) => {
 
 
 const RowEditor = () => {
-    const { isDirty } = useFormState();
     const { formState: { errors }, clearErrors, getValues, setValue } = useFormContext();
     const { index } = useSimpleFormIteratorItem();
     const sourceContext = useSourceContext();
     const [open, setOpen] = React.useState(false);
 
-
     const handleSave = (field: string, event: any) => {
-
         var value = ""
         if (Array.isArray(event)) {
             value = event
@@ -306,7 +304,6 @@ const DraggableRow = () => {
     const { formState: { errors }, getValues, setValue } = useFormContext();
     const { index } = useSimpleFormIteratorItem();
 
-
     const rowErrors = errors?.terms?.[index];
     const hasError = !!rowErrors && Object.keys(rowErrors).length > 0;
 
@@ -349,8 +346,6 @@ const DraggableRow = () => {
                 alignItems: "center",
                 gap: 2,
                 p: 1,
-                // border: "1px solid",
-                // borderColor: "divider",
                 borderRadius: 1,
                 mb: 1,
                 cursor: "grab",
@@ -378,7 +373,19 @@ const DraggableRow = () => {
             )}
             <FormDataConsumer>
                 {({ scopedFormData }) => (
-                    <Typography>{scopedFormData?.name || 'Empty'}</Typography>
+                    <Tooltip title="Name">
+                        <Typography>{scopedFormData?.name || 'Empty'}</Typography>
+                    </Tooltip>
+                )}
+            </FormDataConsumer>
+            <FormDataConsumer>
+                {({ scopedFormData }) => (
+                    <Tooltip title="Enabled">
+                        {
+                            (Object.keys(scopedFormData).includes('enabled') && scopedFormData?.enabled) ?
+                                <CheckCircleIcon color='success' /> : <CancelIcon color='error' />
+                        }
+                    </Tooltip>
                 )}
             </FormDataConsumer>
             <RowEditor />

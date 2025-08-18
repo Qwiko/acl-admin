@@ -1,17 +1,17 @@
 
-import { Labeled, ArrayInput, SimpleFormIterator, ArrayField, BooleanInput, BulkDeleteButton, Button, ChipField, CloneButton, Create, Datagrid, DateField, DeleteButton, Edit, EditButton, FormDataConsumer, Link, List, ReferenceArrayField, ReferenceArrayInput, ReferenceField, ReferenceInput, required, SelectField, SelectInput, Show, ShowButton, SimpleForm, SimpleShowLayout, SingleFieldList, TextField, TextInput, TopToolbar, useDataProvider, useNotify, useRefresh } from 'react-admin';
-
-import { useEffect, useState } from 'react';
+import { ArrayField, ArrayInput, AutocompleteArrayInput, AutocompleteInput, BooleanInput, BulkDeleteButton, Button, ButtonProps, ChipField, Create, Datagrid, DateField, DeleteButton, Edit, EditButton, Form, IconButtonWithTooltip, InfiniteList, Link, ReferenceArrayField, ReferenceArrayInput, ReferenceField, ReferenceInput, required, SelectField, SelectInput, Show, ShowButton, SimpleForm, SimpleFormIterator, SimpleShowLayout, SingleFieldList, TextField, TextInput, TopToolbar, useDataProvider, useNotify, useRefresh, useSimpleFormIterator } from 'react-admin';
 
 import AddIcon from '@mui/icons-material/Add';
 import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
 import HistoryIcon from '@mui/icons-material/History';
+import { Box, Typography } from "@mui/material";
+import React, { useEffect, useState } from 'react';
 
-import { Box, Stack, Typography, Grid } from '@mui/material';
+import { ActionChip, ColoredBooleanField, DefaultPagination, ReferenceNetworks, ReferenceServices } from '../shared/Shared';
 
-import { ActionChip, BulkUpdateFormButton, ColoredBooleanField, DefaultPagination, ReferenceNetworks, ReferenceServices } from '../shared/Shared';
+import { useSimpleFormIteratorItem } from 'react-admin';
+import { useParams } from "react-router-dom";
 
-import { data, useParams } from "react-router-dom";
 
 const PolicyBulkActionButtons = () => (
     <>
@@ -20,16 +20,371 @@ const PolicyBulkActionButtons = () => (
 );
 
 export const PolicyList = () => (
-    <List filters={PolicyListFilters} sort={{ field: 'name', order: 'ASC' }} pagination={<DefaultPagination />} >
+    <InfiniteList filters={PolicyListFilters} sort={{ field: 'name', order: 'ASC' }} pagination={<DefaultPagination />} >
         <Datagrid bulkActionButtons={<PolicyBulkActionButtons />}>
             <TextField source="name" />
             <DateField source="created_at" />
             <DateField source="updated_at" />
         </Datagrid>
-    </List >
+    </InfiniteList >
 );
 
 
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle
+} from "@mui/material";
+import {
+    FormDataConsumer,
+    useSourceContext
+} from "react-admin";
+import { useFormContext, useFormState } from "react-hook-form";
+
+const RowEditButton = React.forwardRef<HTMLButtonElement, { onClick: () => void }>(
+    ({ onClick }, ref) => (
+        <Button ref={ref} onClick={onClick}>
+            Edit
+        </Button>
+    )
+);
+
+import clsx from 'clsx';
+const TermsAddButton = (props: ButtonProps) => {
+    const { source } = useSimpleFormIterator();
+    const { getValues, setValue } = useFormContext();
+    const { className } = props;
+    return (
+        <IconButtonWithTooltip onClick={() => {
+            const terms = getValues("terms")
+            const newTerms = [...terms]
+            newTerms.push({})
+            setValue("terms", newTerms)
+        }}
+            size='small'
+            color="primary"
+            label={"Add row"}
+            className={clsx(`button-add button-add-${source}`, className)}
+        >
+            <AddIcon
+                fontSize="small" />
+        </IconButtonWithTooltip >
+    );
+};
+
+
+const RowEditor = () => {
+    const { isDirty } = useFormState();
+    const { formState: { errors }, clearErrors, getValues, setValue } = useFormContext();
+    const { index } = useSimpleFormIteratorItem();
+    const sourceContext = useSourceContext();
+    const [open, setOpen] = React.useState(false);
+
+
+    const handleSave = (field: string, event: any) => {
+
+        var value = ""
+        if (Array.isArray(event)) {
+            value = event
+        }
+        else if (Number.isInteger(event)) {
+            value = event
+        }
+        else if ("checked" in (event?.target ?? {}) && event?.target?.value == "on") {
+            value = event?.target?.checked
+        } else {
+            value = event?.target?.value ?? null;
+        }
+
+        setValue(sourceContext.getSource(field), value, { shouldValidate: true, shouldDirty: true });
+        clearErrors(sourceContext.getSource(field))
+    };
+    const record = getValues(`terms.[${index}]`)
+
+
+    return (
+        <>
+            <RowEditButton onClick={() => setOpen(true)} />
+
+            <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
+                <DialogTitle>Edit</DialogTitle>
+                <DialogContent>
+                    <Form record={record} noValidate onSubmit={() => { }}>
+                        <TextInput
+                            source={`name`}
+                            fullWidth
+                            onChange={(e) => handleSave("name", e)}
+                            helperText={errors?.terms?.[index]?.name?.message}
+                            sx={{
+                                '& .MuiFormHelperText-root, & label': {
+                                    color: errors?.terms?.[index]?.name ? 'error.main' : undefined
+                                }
+                            }}
+                        />
+
+                        <BooleanInput
+                            source="enabled"
+                            onChange={(e) => handleSave("enabled", e)}
+                            helperText={errors?.terms?.[index]?.enabled?.message}
+                            sx={{
+                                '& .MuiFormHelperText-root, & label': {
+                                    color: errors?.terms?.[index]?.enabled ? 'error.main' : undefined
+                                }
+                            }}
+                        />
+
+                        <BooleanInput
+                            source="logging"
+                            onChange={(e) => handleSave("logging", e)}
+                            helperText={errors?.terms?.[index]?.logging?.message}
+                            sx={{
+                                '& .MuiFormHelperText-root, & label': {
+                                    color: errors?.terms?.[index]?.logging ? 'error.main' : undefined
+                                }
+                            }}
+                        />
+
+                        <ReferenceInput
+                            source="nested_policy_id"
+                            reference="policies"
+                        >
+                            <AutocompleteInput
+                                label="Nested Policy"
+                                onChange={(e) => handleSave("nested_policy_id", e)}
+                                helperText={errors?.terms?.[index]?.nested_policy_id?.message}
+                                sx={{
+                                    '& .MuiFormHelperText-root, & label': {
+                                        color: errors?.terms?.[index]?.nested_policy_id ? 'error.main' : undefined
+                                    }
+                                }}
+                            />
+                        </ReferenceInput>
+
+                        <SelectInput
+                            source="option"
+                            choices={[
+                                { id: 'established', name: 'Established' },
+                                { id: 'is-fragment', name: 'Is Fragment' },
+                                { id: 'tcp-established', name: 'TCP Established' },
+                                { id: 'tcp-initial', name: 'TCP Initial' }
+                            ]}
+                            resettable
+                            onChange={(e) => handleSave("option", e)}
+                            helperText={errors?.terms?.[index]?.option?.message}
+                            sx={{
+                                '& .MuiFormHelperText-root, & label': {
+                                    color: errors?.terms?.[index]?.nested_policy_id ? 'error.main' : undefined
+                                }
+                            }}
+                        />
+
+                        <SelectInput
+                            source="action"
+                            choices={[
+                                { id: 'accept', name: 'Accept' },
+                                { id: 'deny', name: 'Deny' },
+                                { id: 'reject', name: 'Reject' },
+                            ]}
+                            optionText={<ActionChip />}
+                            resettable
+                            onChange={(e) => handleSave("action", e)}
+                            helperText={errors?.terms?.[index]?.action?.message}
+                            sx={{
+                                '& .MuiFormHelperText-root, & label': {
+                                    color: errors?.terms?.[index]?.action ? 'error.main' : undefined
+                                }
+                            }}
+                        />
+
+                        <ReferenceArrayInput
+                            source="source_networks"
+                            reference="networks"
+                        >
+                            <AutocompleteArrayInput
+                                onChange={(e) => {
+                                    console.log(e);
+                                    handleSave("source_networks", e)
+                                }}
+                                helperText={errors?.terms?.[index]?.source_networks?.message}
+                                sx={{
+
+                                    '& .MuiFormHelperText-root, & label': {
+                                        color: errors?.terms?.[index]?.source_networks ? 'error.main' : undefined
+                                    }
+                                }}
+                            />
+                        </ReferenceArrayInput>
+
+                        <BooleanInput
+                            source="negate_source_networks"
+                            label="Negate source"
+                            onChange={(e) => handleSave("negate_source_networks", e)}
+                            helperText={errors?.terms?.[index]?.negate_source_networks?.message}
+                            sx={{
+
+                                '& .MuiFormHelperText-root, & label': {
+                                    color: errors?.terms?.[index]?.negate_source_networks ? 'error.main' : undefined
+                                }
+                            }}
+                        />
+
+                        <ReferenceArrayInput
+                            source="destination_networks"
+                            reference="networks"
+                        >
+                            <AutocompleteArrayInput
+                                onChange={(e) => { console.log(e); handleSave("destination_networks", e) }}
+                                helperText={errors?.terms?.[index]?.destination_networks?.message}
+                                sx={{
+
+                                    '& .MuiFormHelperText-root, & label': {
+                                        color: errors?.terms?.[index]?.destination_networks ? 'error.main' : undefined
+                                    }
+                                }}
+                            />
+                        </ReferenceArrayInput>
+
+                        <BooleanInput
+                            source="negate_destination_networks"
+                            label="Negate destination"
+                            onChange={(e) => handleSave("negate_destination_networks", e)}
+                            helperText={errors?.terms?.[index]?.negate_destination_networks?.message}
+                            sx={{
+
+                                '& .MuiFormHelperText-root, & label': {
+                                    color: errors?.terms?.[index]?.negate_destination_networks ? 'error.main' : undefined
+                                }
+                            }}
+                        />
+
+                        <ReferenceArrayInput
+                            source="source_services"
+                            reference="services"
+                        >
+                            <AutocompleteArrayInput
+                                onChange={(e) => { console.log(e); handleSave("source_services", e) }}
+                                helperText={errors?.terms?.[index]?.source_services?.message}
+                                sx={{
+
+                                    '& .MuiFormHelperText-root, & label': {
+                                        color: errors?.terms?.[index]?.source_services ? 'error.main' : undefined
+                                    }
+                                }}
+                            />
+                        </ReferenceArrayInput>
+
+                        <ReferenceArrayInput
+                            source="destination_services"
+                            reference="services"
+                        >
+                            <AutocompleteArrayInput
+                                onChange={(e) => { console.log(e); handleSave("destination_services", e) }}
+                                helperText={errors?.terms?.[index]?.destination_services?.message}
+                                sx={{
+
+                                    '& .MuiFormHelperText-root, & label': {
+                                        color: errors?.terms?.[index]?.destination_services ? 'error.main' : undefined
+                                    }
+                                }}
+                            />
+                        </ReferenceArrayInput>
+                    </Form>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpen(false)}>Close</Button>
+                </DialogActions>
+            </Dialog>
+        </>
+    );
+};
+
+
+const DraggableRow = () => {
+    const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+    const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+    const { formState: { errors }, getValues, setValue } = useFormContext();
+    const { index } = useSimpleFormIteratorItem();
+
+
+    const rowErrors = errors?.terms?.[index];
+    const hasError = !!rowErrors && Object.keys(rowErrors).length > 0;
+
+    const handleDragStart = (e: React.DragEvent) => {
+        setDraggedIndex(index);
+        e.dataTransfer.setData("text/plain", index.toString());
+    };
+
+    const handleDrop = (e: React.DragEvent) => {
+        e.preventDefault();
+        const fromIndex = parseInt(e.dataTransfer.getData("text/plain"), 10);
+        if (!isNaN(fromIndex) && fromIndex !== index) {
+            const values = getValues("terms");
+            const newArray = [...values];
+            const [moved] = newArray.splice(fromIndex, 1);
+            newArray.splice(index, 0, moved);
+            setValue("terms", newArray, { shouldDirty: true });
+        }
+        setDraggedIndex(null);
+        setHoverIndex(null);
+    };
+    const handleDragLeave = () => {
+        setHoverIndex(null);
+    };
+
+    const handleDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+        setHoverIndex(index);
+    };
+
+    return (
+        <Box
+            draggable
+            onDragStart={handleDragStart}
+            onDrop={handleDrop}
+            onDragLeave={handleDragLeave}
+            onDragOver={handleDragOver}
+            sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+                p: 1,
+                // border: "1px solid",
+                // borderColor: "divider",
+                borderRadius: 1,
+                mb: 1,
+                cursor: "grab",
+                width: "100%",
+                position: "relative",
+                border: hasError ? "1px solid red" : "1px solid transparent",
+                backgroundColor:
+                    hoverIndex === index && draggedIndex !== index
+                        ? "rgba(255,255,255,0.08)" // highlight hover
+                        : "transparent",
+            }}
+        >
+            {/* Optional: Drop indicator line above the row */}
+            {hoverIndex === index && draggedIndex !== index && (
+                <Box
+                    sx={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: 2,
+                        backgroundColor: "primary.main",
+                    }}
+                />
+            )}
+            <FormDataConsumer>
+                {({ scopedFormData }) => (
+                    <Typography>{scopedFormData?.name || 'Empty'}</Typography>
+                )}
+            </FormDataConsumer>
+            <RowEditor />
+        </Box>
+    );
+};
 
 export const PolicyEdit = () => (
     <Edit redirect="show" mutationMode='pessimistic'>
@@ -39,67 +394,15 @@ export const PolicyEdit = () => (
             <ReferenceArrayInput source="targets" reference='targets' />
             <ReferenceArrayInput source="tests" reference='tests' />
 
-            <ArrayInput source="terms">
-                <SimpleFormIterator getItemLabel={index => `#${index + 1}`}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={4}>
-                            <TextInput source="name" validate={required()} fullWidth />
-                        </Grid>
-                        <Grid item xs={2}>
-                            <BooleanInput source="enabled" />
-                        </Grid>
-                        <Grid item xs={2}>
-                            <BooleanInput source="logging" />
-                        </Grid>
-                        <Grid item xs={4}>
-                            <ReferenceInput source="nested_policy_id" reference="policies" />
-                        </Grid>
-                        <Grid item xs={3}>
-                            <SelectInput source="option" choices={[
-                                { id: 'established', name: 'Established' },
-                                { id: 'is-fragment', name: 'Is Fragment' },
-                                { id: 'tcp-established', name: 'TCP Established' },
-                                { id: 'tcp-initial', name: 'TCP Initial' }
-                            ]} resettable />
-                        </Grid>
+            <ArrayInput source="terms" >
+                <SimpleFormIterator
+                    inline
+                    disableReordering
+                    addButton={<TermsAddButton
+                    />}
+                >
 
-                        <Grid item xs={3}>
-                            <SelectInput source="action" choices={[
-                                { id: 'accept', name: 'Accept' },
-                                { id: 'deny', name: 'Deny' },
-                                { id: 'reject', name: 'Reject' },
-                            ]} optionText={<ActionChip />} resettable />
-                        </Grid>
-                    </Grid>
-                    <Typography variant="h7" gutterBottom >
-                        Networks
-                    </Typography>
-                    <Grid container spacing={2}>
-                        <Grid item xs={4}>
-                            <ReferenceArrayInput source="source_networks" reference="networks" />
-                        </Grid>
-                        <Grid item xs={2}>
-                            <BooleanInput source="negate_source_networks" label="Negate source" />
-                        </Grid>
-
-                        <Grid item xs={4}>
-                            <ReferenceArrayInput source="destination_networks" reference="networks" />
-                        </Grid>
-                        <Grid item xs={2}>
-                            <BooleanInput source="negate_destination_networks" label="Negate destination" />
-                        </Grid>
-                    </Grid>
-                    <Typography variant="h7" gutterBottom >
-                        Services
-                    </Typography>
-                    <Grid container spacing={2}>
-                        <Grid item xs={4}>
-                            <ReferenceArrayInput source="source_services" reference="services" />
-                        </Grid>
-                        <Grid item xs={4}>
-                            <ReferenceArrayInput source="destination_services" reference="services" />
-                        </Grid>
-                    </Grid>
+                    <DraggableRow />
                 </SimpleFormIterator>
             </ArrayInput>
 
@@ -115,67 +418,14 @@ export const PolicyCreate = () => (
             <ReferenceArrayInput source="targets" reference='targets' />
             <ReferenceArrayInput source="tests" reference='tests' />
 
-            <ArrayInput source="terms">
-                <SimpleFormIterator getItemLabel={index => `#${index + 1}`}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={4}>
-                            <TextInput source="name" validate={required()} fullWidth />
-                        </Grid>
-                        <Grid item xs={2}>
-                            <BooleanInput source="enabled" />
-                        </Grid>
-                        <Grid item xs={2}>
-                            <BooleanInput source="logging" />
-                        </Grid>
-                        <Grid item xs={4}>
-                            <ReferenceInput source="nested_policy_id" reference="policies" />
-                        </Grid>
-                        <Grid item xs={3}>
-                            <SelectInput source="option" choices={[
-                                { id: 'established', name: 'Established' },
-                                { id: 'is-fragment', name: 'Is Fragment' },
-                                { id: 'tcp-established', name: 'TCP Established' },
-                                { id: 'tcp-initial', name: 'TCP Initial' }
-                            ]} resettable />
-                        </Grid>
+            <ArrayInput source="terms" >
+                <SimpleFormIterator
+                    inline
+                    disableReordering
+                    addButton={<TermsAddButton />}
+                >
 
-                        <Grid item xs={3}>
-                            <SelectInput source="action" choices={[
-                                { id: 'accept', name: 'Accept' },
-                                { id: 'deny', name: 'Deny' },
-                                { id: 'reject', name: 'Reject' },
-                            ]} optionText={<ActionChip />} resettable />
-                        </Grid>
-                    </Grid>
-                    <Typography variant="h7" gutterBottom >
-                        Networks
-                    </Typography>
-                    <Grid container spacing={2}>
-                        <Grid item xs={4}>
-                            <ReferenceArrayInput source="source_networks" reference="networks" />
-                        </Grid>
-                        <Grid item xs={2}>
-                            <BooleanInput source="negate_source_networks" label="Negate source" />
-                        </Grid>
-
-                        <Grid item xs={4}>
-                            <ReferenceArrayInput source="destination_networks" reference="networks" />
-                        </Grid>
-                        <Grid item xs={2}>
-                            <BooleanInput source="negate_destination_networks" label="Negate destination" />
-                        </Grid>
-                    </Grid>
-                    <Typography variant="h7" gutterBottom >
-                        Services
-                    </Typography>
-                    <Grid container spacing={2}>
-                        <Grid item xs={4}>
-                            <ReferenceArrayInput source="source_services" reference="services" />
-                        </Grid>
-                        <Grid item xs={4}>
-                            <ReferenceArrayInput source="destination_services" reference="services" />
-                        </Grid>
-                    </Grid>
+                    <DraggableRow />
                 </SimpleFormIterator>
             </ArrayInput>
         </SimpleForm>
@@ -333,209 +583,3 @@ export const PolicyShow = () => {
         </Show >
     );
 }
-
-// export const PolicyTermCreate = () => {
-//     const { id } = useParams();
-//     const transform = data => {
-//         // Calculate the position based on the selected relative position
-//         if (data.relative_position === 'below') {
-//             data.position = data.position + 1;
-//         }
-//         // Remove the relative_position field from the data
-//         delete data.relative_position;
-
-//         return {
-//             ...data,
-//         }
-//     };
-//     return (
-//         <Create transform={transform} resource={"policies/" + id + "/terms"} redirect={"/policies/" + id + "/show"}>
-//             <SimpleForm sx={{ maxWidth: 500 }}>
-//                 <TextInput source="name" validate={required()} />
-
-
-//                 <Typography variant="h6" gutterBottom>
-//                     Position
-//                 </Typography>
-//                 <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
-//                     <Box flex={0.5} mr={{ xs: 0, sm: '0.5em' }}>
-//                         <SelectInput source="relative_position" choices={[
-//                             { id: 'above', name: 'Above' },
-//                             { id: 'below', name: 'Below' },
-//                         ]} defaultValue='above' label="Relative Position" validate={required()} />
-//                     </Box>
-//                     <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
-//                         <ReferenceInput source="position" reference={"policies/" + id + "/terms"} id='position' sort={{ field: 'position', order: 'ASC' }}>
-//                             <SelectInput optionText="name" optionValue="position" />
-//                         </ReferenceInput>
-//                     </Box>
-//                 </Box>
-
-//                 <Typography variant="h6" gutterBottom>
-//                     Networks
-//                 </Typography>
-//                 <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
-//                     <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
-//                         <ReferenceArrayInput source="source_networks" reference="networks" options={{ fullWidth: true }} />
-//                     </Box>
-//                     <Box flex={0.2} ml={{ xs: 0, sm: '0.5em' }}>
-//                         <BooleanInput source="negate_source_networks" fullWidth />
-//                     </Box>
-//                 </Box>
-
-//                 <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
-//                     <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
-//                         <ReferenceArrayInput source="destination_networks" reference="networks" />
-//                     </Box>
-//                     <Box flex={0.2} ml={{ xs: 0, sm: '0.5em' }}>
-//                         <BooleanInput source="negate_destination_networks" />
-//                     </Box>
-//                 </Box>
-
-//                 <Typography variant="h6" gutterBottom>
-//                     Services
-//                 </Typography>
-//                 <ReferenceArrayInput source="source_services" reference="services" />
-//                 <ReferenceArrayInput source="destination_services" reference="services" />
-
-//                 <Typography variant="h6" gutterBottom>
-//                     Options
-//                 </Typography>
-//                 <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
-//                     <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
-//                         <SelectInput source="option" choices={[
-//                             { id: 'established', name: 'Established' },
-//                             { id: 'is-fragment', name: 'Is Fragment' },
-//                             { id: 'tcp-established', name: 'TCP Established' },
-//                             { id: 'tcp-initial', name: 'TCP Initial' }
-//                         ]} resettable />
-//                     </Box>
-//                     <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
-
-//                         <SelectInput source="action" choices={[
-//                             { id: 'accept', name: 'Accept' },
-//                             { id: 'deny', name: 'Deny' },
-//                             { id: 'reject', name: 'Reject' },
-//                         ]} optionText={<ActionChip />} resettable />
-//                     </Box>
-//                 </Box>
-//                 <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
-//                     <BooleanInput source="enabled" />
-//                     <BooleanInput source="logging" />
-//                 </Box>
-
-//                 <Typography variant="h6" gutterBottom>
-//                     Nested Policy
-//                 </Typography>
-//                 <ReferenceInput source="nested_policy_id" reference="policies" />
-//             </SimpleForm>
-//         </Create >
-//     );
-// }
-
-// export const PolicyTermEdit = () => {
-//     const { id, addressId } = useParams();
-//     const transform = data => {
-//         // Calculate the position based on the selected relative position
-//         if (data.relative_position === 'below') {
-//             data.position = data.position + 1;
-//         }
-//         // Remove the relative_position field from the data
-//         delete data.relative_position;
-
-//         return {
-//             ...data,
-//         }
-//     };
-//     return (
-//         <Edit transform={transform} resource={"policies/" + id + "/terms"} id={addressId} redirect={"/policies/" + id + "/show"} mutationMode='pessimistic'>
-//             <SimpleForm sx={{ maxWidth: 500 }}>
-//                 <TextInput source="name" validate={required()} />
-
-//                 <BooleanInput source="move" />
-
-//                 <FormDataConsumer<{ move: boolean }>>
-//                     {({ formData }) => formData.move &&
-//                         <>
-//                             <Typography variant="h6" gutterBottom>
-//                                 Position
-//                             </Typography>
-//                             <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
-//                                 <Box flex={0.5} mr={{ xs: 0, sm: '0.5em' }}>
-//                                     <SelectInput source="relative_position" choices={[
-//                                         { id: 'above', name: 'Above' },
-//                                         { id: 'below', name: 'Below' },
-//                                     ]} defaultValue='above' label="Relative Position" validate={required()} />
-//                                 </Box>
-//                                 <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
-//                                     <ReferenceInput source="position" reference={"policies/" + id + "/terms"} id='position' sort={{ field: 'position', order: 'ASC' }}>
-//                                         <SelectInput optionText="name" optionValue="position" />
-//                                     </ReferenceInput>
-//                                 </Box>
-//                             </Box>
-//                         </>
-//                     }
-//                 </FormDataConsumer>
-
-
-//                 <Typography variant="h6" gutterBottom>
-//                     Networks
-//                 </Typography>
-//                 <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
-//                     <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
-//                         <ReferenceArrayInput source="source_networks" reference="networks" options={{ fullWidth: true }} />
-//                     </Box>
-//                     <Box flex={0.2} ml={{ xs: 0, sm: '0.5em' }}>
-//                         <BooleanInput source="negate_source_networks" fullWidth />
-//                     </Box>
-//                 </Box>
-
-//                 <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
-//                     <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
-//                         <ReferenceArrayInput source="destination_networks" reference="networks" />
-//                     </Box>
-//                     <Box flex={0.2} ml={{ xs: 0, sm: '0.5em' }}>
-//                         <BooleanInput source="negate_destination_networks" />
-//                     </Box>
-//                 </Box>
-
-//                 <Typography variant="h6" gutterBottom>
-//                     Services
-//                 </Typography>
-//                 <ReferenceArrayInput source="source_services" reference="services" />
-//                 <ReferenceArrayInput source="destination_services" reference="services" />
-
-//                 <Typography variant="h6" gutterBottom>
-//                     Options
-//                 </Typography>
-//                 <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
-//                     <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
-//                         <SelectInput source="option" choices={[
-//                             { id: 'established', name: 'Established' },
-//                             { id: 'is-fragment', name: 'Is Fragment' },
-//                             { id: 'tcp-established', name: 'TCP Established' },
-//                             { id: 'tcp-initial', name: 'TCP Initial' }
-//                         ]} resettable />
-//                     </Box>
-//                     <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
-
-//                         <SelectInput source="action" choices={[
-//                             { id: 'accept', name: 'Accept' },
-//                             { id: 'deny', name: 'Deny' },
-//                             { id: 'reject', name: 'Reject' },
-//                         ]} optionText={<ActionChip />} resettable />
-//                     </Box>
-//                 </Box>
-//                 <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
-//                     <BooleanInput source="enabled" />
-//                     <BooleanInput source="logging" />
-//                 </Box>
-
-//                 <Typography variant="h6" gutterBottom>
-//                     Nested Policy
-//                 </Typography>
-//                 <ReferenceInput source="nested_policy_id" reference="policies" />
-//             </SimpleForm>
-//         </Edit>
-//     );
-// };

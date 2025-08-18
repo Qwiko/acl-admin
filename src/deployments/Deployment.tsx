@@ -1,5 +1,5 @@
 
-import { BulkDeleteButton, ChipField, Create, Datagrid, DateField, Edit, EditButton, FunctionField, NumberInput, ReferenceArrayField, ReferenceArrayInput, required, RichTextField, SelectArrayInput, SelectField, SelectInput, SimpleForm, SingleFieldList, TabbedShowLayout, TextArrayInput, TextField, TextInput } from 'react-admin';
+import { InfiniteList, BulkDeleteButton, ChipField, Create, Datagrid, DateField, Edit, EditButton, FunctionField, NumberInput, ReferenceArrayField, ReferenceArrayInput, required, RichTextField, SelectArrayInput, SelectField, SelectInput, SimpleForm, SingleFieldList, TabbedShowLayout, TextArrayInput, TextField, TextInput } from 'react-admin';
 
 
 import { ReferenceField, ReferenceInput, Show, ShowButton, SimpleShowLayout } from 'react-admin';
@@ -25,7 +25,7 @@ const DeploymentBulkActionButtons = () => (
 );
 
 export const DeploymentList = () => (
-    <List filters={DeploymentFilters} pagination={<DefaultPagination />} sort={{ field: 'created_at', order: 'DESC' }}>
+    <InfiniteList filters={DeploymentFilters} pagination={<DefaultPagination />} sort={{ field: 'created_at', order: 'DESC' }}>
         <Datagrid bulkActionButtons={<DeploymentBulkActionButtons />}>
             <FunctionField
                 source="status"
@@ -63,7 +63,7 @@ export const DeploymentList = () => (
             <DateField source="created_at" />
             <DateField source="updated_at" />
         </Datagrid>
-    </List>
+    </InfiniteList>
 );
 
 

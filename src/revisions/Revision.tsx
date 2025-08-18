@@ -1,5 +1,6 @@
 
 import {
+    InfiniteList,
     BulkDeleteButton,
     Button,
     Confirm,
@@ -36,7 +37,7 @@ const RevisionFilters = [
 export const RevisionList = () => {
     return (
 
-        <List filters={RevisionFilters} sort={{ field: 'created_at', order: 'DESC' }} pagination={<DefaultPagination />} >
+        <InfiniteList filters={RevisionFilters} sort={{ field: 'created_at', order: 'DESC' }} pagination={<DefaultPagination />} >
             <Datagrid bulkActionButtons={<RevisionBulkActionButtons />}>
                 <TextField source="comment" />
                 <DateField source="created_at" />
@@ -44,7 +45,7 @@ export const RevisionList = () => {
                 <ReferenceField source="dynamic_policy_id" reference="dynamic_policies" />
                 <ReferenceField source="policy_id" reference="policies" />
             </Datagrid>
-        </List>
+        </InfiniteList>
     )
 }
 

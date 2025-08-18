@@ -1,9 +1,7 @@
 
-import { BulkDeleteButton, ChipField, Create, Datagrid, DateField, Edit, EditButton, ReferenceArrayField, ReferenceArrayInput, required, SelectArrayInput, SelectField, SelectInput, SimpleForm, SingleFieldList, TextField, TextInput } from 'react-admin';
+import { BulkDeleteButton, ChipField, Create, Datagrid, DateField, Edit, EditButton, InfiniteList, ReferenceArrayField, ReferenceArrayInput, required, SelectArrayInput, SelectField, SelectInput, SimpleForm, SingleFieldList, TextField, TextInput } from 'react-admin';
 
 
-
-import { List } from 'react-admin';
 
 const TargetFilters = [
     <TextInput label="Search" source="q" alwaysOn />,
@@ -23,7 +21,7 @@ const TargetBulkActionButtons = () => (
 );
 
 export const TargetList = () => (
-    <List filters={TargetFilters} pagination={<DefaultPagination />} >
+    <InfiniteList filters={TargetFilters} pagination={<DefaultPagination />} >
         <Datagrid bulkActionButtons={<TargetBulkActionButtons />}>
             <TextField source="name" />
             <ReferenceField source="generator" reference='target_generators' />
@@ -36,7 +34,7 @@ export const TargetList = () => (
             <DateField source="created_at" />
             <DateField source="updated_at" />
         </Datagrid>
-    </List>
+    </InfiniteList>
 );
 
 export const TargetEdit = () => (
@@ -83,7 +81,7 @@ const TargetShowActions = () => {
 }
 
 
-import { ReferenceField, ReferenceInput, Show, ShowButton, SimpleShowLayout } from 'react-admin';
+import { ReferenceField, ReferenceInput, Show, SimpleShowLayout } from 'react-admin';
 
 import { useParams } from 'react-router-dom';
 

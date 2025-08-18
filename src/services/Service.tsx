@@ -1,21 +1,13 @@
 
-import { ArrayInput, SimpleFormIterator, BulkDeleteButton, ChipField, CloneButton, Create, Datagrid, DateField, Edit, EditButton, Link, required, SimpleForm, SingleFieldList, TextField, TextInput } from 'react-admin';
+import { ArrayField, ArrayInput, BulkDeleteButton, ChipField, Create, Datagrid, DateField, DeleteButton, Edit, EditButton, InfiniteList, ReferenceArrayField, ReferenceField, ReferenceInput, required, Show, SimpleForm, SimpleFormIterator, SimpleShowLayout, SingleFieldList, TextField, TextInput, TopToolbar, useDataProvider, useNotify, useRefresh } from 'react-admin';
 
-import { DeleteButton, TopToolbar } from 'react-admin';
-import { ReferenceArrayField, useDataProvider } from 'react-admin';
-import { Tooltip } from '@mui/material';
-import { useNotify, useRefresh } from 'react-admin';
 import { useEffect, useState } from 'react';
-
-import { ArrayField, ReferenceField, ReferenceInput, Show, SimpleShowLayout } from 'react-admin';
 
 import { useParams } from 'react-router-dom';
 
-import AddIcon from '@mui/icons-material/Add';
 
-import { Button } from 'react-admin';
 
-import { List } from 'react-admin';
+
 
 const ServiceFilters = [
     <TextInput label="Search" source="q" alwaysOn />,
@@ -29,13 +21,13 @@ const ServiceBulkActionButtons = () => (
 
 export const ServiceList = () => (
 
-    <List filters={ServiceFilters}>
+    <InfiniteList filters={ServiceFilters}>
         <Datagrid bulkActionButtons={<ServiceBulkActionButtons />}>
             <TextField source="name" />
             <DateField source="created_at" />
             <DateField source="updated_at" />
         </Datagrid>
-    </List>
+    </InfiniteList>
 );
 
 export const ServiceEdit = () => (

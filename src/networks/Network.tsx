@@ -1,5 +1,5 @@
 
-import { ArrayInput, SimpleFormIterator, Button, CloneButton, Create, SingleFieldList, ChipField, CreateButton, Datagrid, DateField, Edit, EditButton, Link, ReferenceArrayField, ReferenceInput, required, ShowButton, SimpleForm, TextField, TextInput } from 'react-admin';
+import { InfiniteList, ArrayInput, SimpleFormIterator, Button, CloneButton, Create, SingleFieldList, ChipField, CreateButton, Datagrid, DateField, Edit, EditButton, Link, ReferenceArrayField, ReferenceInput, required, ShowButton, SimpleForm, TextField, TextInput } from 'react-admin';
 
 
 import { BulkDeleteButton, List } from 'react-admin';
@@ -20,13 +20,13 @@ const NetworkBulkActionButtons = () => (
 
 export const NetworkList = () => {
     return (
-        <List filters={NetworkFilters} pagination={<DefaultPagination />}>
+        <InfiniteList filters={NetworkFilters} pagination={<DefaultPagination />}>
             <Datagrid bulkActionButtons={<NetworkBulkActionButtons />}>
                 <TextField source="name" />
                 <DateField source="created_at" />
                 <DateField source="updated_at" />
             </Datagrid>
-        </List>
+        </InfiniteList>
     );
 };
 

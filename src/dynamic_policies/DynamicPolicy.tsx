@@ -1,5 +1,5 @@
 
-import { CloneButton, AutocompleteArrayInput, ChipField, BulkDeleteButton, Button, Create, Datagrid, DateField, DeleteButton, Edit, EditButton, Link, List, ReferenceArrayField, ReferenceArrayInput, ReferenceField, required, SelectField, SelectInput, Show, ShowButton, SimpleForm, SimpleShowLayout, TextField, TextInput, TopToolbar, useDataProvider, useNotify, useRefresh, useRecordContext, SingleFieldList } from 'react-admin';
+import { InfiniteList, CloneButton, AutocompleteArrayInput, ChipField, BulkDeleteButton, Button, Create, Datagrid, DateField, DeleteButton, Edit, EditButton, Link, List, ReferenceArrayField, ReferenceArrayInput, ReferenceField, required, SelectField, SelectInput, Show, ShowButton, SimpleForm, SimpleShowLayout, TextField, TextInput, TopToolbar, useDataProvider, useNotify, useRefresh, useRecordContext, SingleFieldList } from 'react-admin';
 import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
 
 import AddIcon from '@mui/icons-material/Add';
@@ -14,13 +14,13 @@ const DynamicPolicyBulkActionButtons = () => (
 );
 
 export const DynamicPolicyList = () => (
-    <List filters={DynamicPolicyListFilters} pagination={<DefaultPagination />} >
+    <InfiniteList filters={DynamicPolicyListFilters} pagination={<DefaultPagination />} >
         <Datagrid bulkActionButtons={<DynamicPolicyBulkActionButtons />}>
             <TextField source="name" />
             <DateField source="created_at" />
             <DateField source="updated_at" />
         </Datagrid>
-    </List>
+    </InfiniteList>
 );
 
 export const DynamicPolicyEdit = () => (

@@ -1,8 +1,9 @@
 import EditIcon from '@mui/icons-material/Edit';
 import { Chip, DialogActions } from '@mui/material';
-import { BooleanField, BooleanFieldProps, ChipField, Pagination, ReferenceArrayField, ReferenceArrayFieldViewProps, SingleFieldList, useRecordContext, useResourceContext } from 'react-admin';
+import { InfinitePagination, BooleanField, BooleanFieldProps, ChipField, Pagination, ReferenceArrayField, ReferenceArrayFieldViewProps, SingleFieldList, useRecordContext, useResourceContext } from 'react-admin';
 
-import { Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { Box, Card, Typography, Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
+
 import React, { useState, cloneElement } from 'react';
 import { useListContext, useNotify, useRefresh, useUpdate } from 'react-admin';
 
@@ -65,8 +66,21 @@ export const ReferenceServices = (props: ReferenceArrayFieldViewProps) => {
 };
 
 export const DefaultPagination = () => {
+const { total } = useListContext();
     return (
-        <Pagination rowsPerPageOptions={[10, 25, 50, 75, 100]} />
-    )
+        <>
+            <InfinitePagination />
+            {total > 0 && (
+                <Box sx={{ position: "sticky", bottom: 0, textAlign: "center" }}>
+                    <Card
+                        elevation={2}
+                        sx={{ px: 2, py: 1, mb: 1, display: 'inline-block' }}
+                    >
+                        <Typography variant="body2">{total} results</Typography>
+                    </Card>
+                </Box>
+            )}
+        </>
+    );
 }
 

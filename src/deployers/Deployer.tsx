@@ -2,7 +2,7 @@
 import { BulkDeleteButton, ChipField, Create, Datagrid, DateField, Edit, EditButton, NumberInput, ReferenceArrayField, ReferenceArrayInput, required, SelectArrayInput, SelectField, SelectInput, SimpleForm, SingleFieldList, TextField, TextInput, useRecordContext } from 'react-admin';
 
 
-import { ReferenceField, ReferenceInput, Show, ShowButton, SimpleShowLayout } from 'react-admin';
+import { InfiniteList, ReferenceField, ReferenceInput, Show, ShowButton, SimpleShowLayout } from 'react-admin';
 
 
 import { useNotify, useRefresh, FormDataConsumer } from 'react-admin';
@@ -34,7 +34,7 @@ const DeployerBulkActionButtons = () => (
 );
 
 export const DeployerList = () => (
-    <List filters={DeployerFilters} pagination={<DefaultPagination />} >
+    <InfiniteList filters={DeployerFilters} pagination={<DefaultPagination />} >
         <Datagrid bulkActionButtons={<DeployerBulkActionButtons />}>
             <TextField source="name" />
             <ReferenceField source="target" reference='targets' />
@@ -50,7 +50,7 @@ export const DeployerList = () => (
             {/* <EditButton />
             <ShowButton /> */}
         </Datagrid>
-    </List>
+    </InfiniteList>
 );
 
 export const DeployerCreate = () => {

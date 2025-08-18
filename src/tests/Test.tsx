@@ -1,5 +1,5 @@
 
-import { ArrayInput, SimpleFormIterator, ArrayField, Show, SimpleShowLayout, Button, ChipField, CloneButton, Create, Datagrid, DateField, Edit, EditButton, Link, NumberField, NumberInput, ReferenceArrayField, ReferenceArrayInput, required, SelectField, SelectInput, ShowButton, SimpleForm, SingleFieldList, TextField, TextInput } from 'react-admin';
+import { InfiniteList, ArrayInput, SimpleFormIterator, ArrayField, Show, SimpleShowLayout, Button, ChipField, CloneButton, Create, Datagrid, DateField, Edit, EditButton, Link, NumberField, NumberInput, ReferenceArrayField, ReferenceArrayInput, required, SelectField, SelectInput, ShowButton, SimpleForm, SingleFieldList, TextField, TextInput } from 'react-admin';
 
 
 import { useParams } from 'react-router-dom';
@@ -27,13 +27,13 @@ const TestBulkActionButtons = () => (
 
 
 export const TestList = () => (
-    <List filters={TestFilters} pagination={<DefaultPagination />} >
+    <InfiniteList filters={TestFilters} pagination={<DefaultPagination />} >
         <Datagrid bulkActionButtons={<TestBulkActionButtons />} >
             <TextField source="name" />
             <DateField source="created_at" />
             <DateField source="updated_at" />
         </Datagrid>
-    </List>
+    </InfiniteList>
 );
 
 export const TestEdit = () => (

@@ -1,5 +1,5 @@
 
-import { BulkDeleteButton, ChipField, Create, Datagrid, DateField, Edit, EditButton, InfiniteList, ReferenceArrayField, ReferenceArrayInput, required, SelectArrayInput, SelectField, SelectInput, SimpleForm, SingleFieldList, TextField, TextInput } from 'react-admin';
+import { ArrayField, ArrayInput, BulkDeleteButton, ChipField, Create, Datagrid, DateField, Edit, EditButton, InfiniteList, ReferenceArrayField, ReferenceArrayInput, required, SelectArrayInput, SelectField, SelectInput, SimpleForm, SimpleFormIterator, SingleFieldList, TextField, TextInput } from 'react-admin';
 
 
 
@@ -47,6 +47,12 @@ export const TargetEdit = () => (
                 { id: 'inet6', name: 'IPv6' },
                 { id: 'mixed', name: 'IPv4 & IPv6' },
             ]} resettable />
+            <ArrayInput source="replacements">
+                <SimpleFormIterator inline>
+                    <TextInput source="pattern" />
+                    <TextInput source="replacement" />
+                </SimpleFormIterator>
+            </ArrayInput>
             <ReferenceArrayInput source="dynamic_policies" reference="dynamic_policies" />
             <ReferenceArrayInput source="policies" reference="policies" />
         </SimpleForm>
@@ -63,6 +69,12 @@ export const TargetCreate = () => (
                 { id: 'inet6', name: 'IPv6' },
                 { id: 'mixed', name: 'IPv4 & IPv6' },
             ]} resettable />
+            <ArrayInput source="replacements">
+                <SimpleFormIterator inline>
+                    <TextInput source="pattern" />
+                    <TextInput source="replacement" />
+                </SimpleFormIterator>
+            </ArrayInput>
             <ReferenceArrayInput source="dynamic_policies" reference="dynamic_policies" />
             <ReferenceArrayInput source="policies" reference="policies" />
         </SimpleForm>
@@ -86,7 +98,7 @@ import { ReferenceField, ReferenceInput, Show, SimpleShowLayout } from 'react-ad
 import { useParams } from 'react-router-dom';
 
 
-
+const CustomReplacementEmpty = () => <div>No Replacements found</div>;
 
 import { useNotify, useRefresh } from 'react-admin';
 import { DefaultPagination } from '../shared/Shared';
@@ -105,6 +117,14 @@ export const TargetShow = () => {
                     { id: 'inet6', name: 'IPv6' },
                     { id: 'mixed', name: 'IPv4 & IPv6' },
                 ]} />
+            </SimpleShowLayout>
+            <SimpleShowLayout direction="row">
+                <ArrayField source="replacements" >
+                    <Datagrid hover={false} empty={<CustomReplacementEmpty />} bulkActionButtons={false} rowClick={false}>
+                        <TextField source="pattern" sortable={false} />
+                        <TextField source="replacement" sortable={false} />
+                    </Datagrid>
+                </ArrayField>
             </SimpleShowLayout>
             <SimpleShowLayout direction="row">
                 <DateField source="created_at" />

@@ -48,7 +48,6 @@ const authProvider: AuthProvider = {
     return Promise.resolve();
   },
   getIdentity: async () => {
-    console.log("HERE GETIDENTITY");
 
     const url = `${apiUrl}/me`;
     const { access_token } = JSON.parse(localStorage.getItem("auth"));
@@ -58,7 +57,6 @@ const authProvider: AuthProvider = {
         Authorization: `Bearer ${access_token}`,
       },
     });
-    console.log(response);
 
     if (!response.ok) {
       throw new Error(response.statusText);

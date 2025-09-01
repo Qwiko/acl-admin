@@ -1,9 +1,10 @@
 
-import { InfiniteList, CloneButton, AutocompleteArrayInput, ChipField, BulkDeleteButton, Button, Create, Datagrid, DateField, DeleteButton, Edit, EditButton, Link, List, ReferenceArrayField, ReferenceArrayInput, ReferenceField, required, SelectField, SelectInput, Show, ShowButton, SimpleForm, SimpleShowLayout, TextField, TextInput, TopToolbar, useDataProvider, useNotify, useRefresh, useRecordContext, SingleFieldList } from 'react-admin';
-import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
-
 import AddIcon from '@mui/icons-material/Add';
+import CheckIcon from '@mui/icons-material/Check';
+import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
+import CloseIcon from '@mui/icons-material/Close';
 import HistoryIcon from '@mui/icons-material/History';
+import { BooleanField, BooleanInput, BulkDeleteButton, Button, ChipField, CloneButton, Create, Datagrid, DateField, DeleteButton, Edit, EditButton, InfiniteList, Link, ReferenceArrayField, ReferenceArrayInput, required, SelectField, SelectInput, Show, SimpleForm, SimpleShowLayout, SingleFieldList, TextField, TextInput, TopToolbar } from 'react-admin';
 import { useParams } from "react-router-dom";
 import { DefaultPagination } from '../shared/Shared';
 
@@ -17,6 +18,8 @@ export const DynamicPolicyList = () => (
     <InfiniteList filters={DynamicPolicyListFilters} pagination={<DefaultPagination />} >
         <Datagrid bulkActionButtons={<DynamicPolicyBulkActionButtons />}>
             <TextField source="name" />
+            <TextField source="comment" />
+            <BooleanField source="edited" label="Synchronized" valueLabelTrue="No" valueLabelFalse="Yes" TrueIcon={CloseIcon} FalseIcon={CheckIcon} />
             <DateField source="created_at" />
             <DateField source="updated_at" />
         </Datagrid>
@@ -115,6 +118,7 @@ const DynamicPolicyShowActions = () => {
 
 const DynamicPolicyListFilters = [
     <TextInput label="Search" source="q" alwaysOn />,
+    <BooleanInput source="edited" label="Synchronized" format={(value) => !value} parse={(value) => !value} />
 ];
 
 
@@ -122,8 +126,11 @@ export const DynamicPolicyShow = () => {
     const { id } = useParams();
     return (
         <Show actions={<DynamicPolicyShowActions />}>
-            <SimpleShowLayout>
+            <SimpleShowLayout direction="row">
                 <TextField source="name" />
+                <BooleanField source="edited" label="Synchronized" valueLabelTrue="no" valueLabelFalse="Yes" TrueIcon={CloseIcon} FalseIcon={CheckIcon} />
+            </SimpleShowLayout>
+            <SimpleShowLayout>
                 <TextField source="comment" />
             </SimpleShowLayout>
             <SimpleShowLayout direction="row">

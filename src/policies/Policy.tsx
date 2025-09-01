@@ -1,12 +1,14 @@
 
 import AddIcon from '@mui/icons-material/Add';
 import CancelIcon from '@mui/icons-material/Cancel';
+import CheckIcon from '@mui/icons-material/Check';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
+import CloseIcon from '@mui/icons-material/Close';
 import HistoryIcon from '@mui/icons-material/History';
 import { Box, Tooltip, Typography } from "@mui/material";
 import React, { useEffect, useState } from 'react';
-import { ArrayField, ArrayInput, AutocompleteArrayInput, AutocompleteInput, BooleanInput, BulkDeleteButton, Button, ButtonProps, ChipField, Create, Datagrid, DateField, DeleteButton, Edit, EditButton, Form, IconButtonWithTooltip, InfiniteList, Link, ReferenceArrayField, ReferenceArrayInput, ReferenceField, ReferenceInput, required, SelectField, SelectInput, Show, ShowButton, SimpleForm, SimpleFormIterator, SimpleShowLayout, SingleFieldList, TextField, TextInput, TopToolbar, useDataProvider, useNotify, useRefresh, useSimpleFormIterator } from 'react-admin';
+import { ArrayField, ArrayInput, AutocompleteArrayInput, AutocompleteInput, BooleanField, BooleanInput, BulkDeleteButton, Button, ButtonProps, ChipField, Create, Datagrid, DateField, DeleteButton, Edit, EditButton, Form, IconButtonWithTooltip, InfiniteList, Link, ReferenceArrayField, ReferenceArrayInput, ReferenceField, ReferenceInput, required, SelectField, SelectInput, Show, ShowButton, SimpleForm, SimpleFormIterator, SimpleShowLayout, SingleFieldList, TextField, TextInput, TopToolbar, useDataProvider, useNotify, useRefresh, useSimpleFormIterator } from 'react-admin';
 
 import { ActionChip, ColoredBooleanField, DefaultPagination, ReferenceNetworks, ReferenceServices } from '../shared/Shared';
 
@@ -24,6 +26,8 @@ export const PolicyList = () => (
     <InfiniteList filters={PolicyListFilters} sort={{ field: 'name', order: 'ASC' }} pagination={<DefaultPagination />} >
         <Datagrid bulkActionButtons={<PolicyBulkActionButtons />}>
             <TextField source="name" />
+            <TextField source="comment" />
+            <BooleanField source="edited" label="Synchronized" valueLabelTrue="No" valueLabelFalse="Yes" TrueIcon={CloseIcon} FalseIcon={CheckIcon} />
             <DateField source="created_at" />
             <DateField source="updated_at" />
         </Datagrid>
@@ -81,23 +85,53 @@ const RowEditor = () => {
     const sourceContext = useSourceContext();
     const [open, setOpen] = React.useState(false);
 
-    const handleSave = (field: string, event: any) => {
-        var value = ""
+    // const handleSave = (field: string, event: any) => {
+    //     var value = ""
+    //     if (Array.isArray(event)) {
+    //         value = event
+    //     }
+    //     else if (Number.isInteger(event)) {
+    //         value = event
+    //     }
+    //     else if ("checked" in (event?.target ?? {}) && event?.target?.value == "on") {
+    //         value = event?.target?.checked
+    //     } else {
+    //         value = event?.target?.value ?? null;
+    //     }
+
+    //     setValue(sourceContext.getSource(field), value, { shouldValidate: true, shouldDirty: true });
+    //     clearErrors(sourceContext.getSource(field))
+    // };
+
+    const [localValues, setLocalValues] = useState<Record<string, any>>({});
+
+    const handleLocalChange = (field: string, event: any) => {
+        let value: any;
+
         if (Array.isArray(event)) {
-            value = event
-        }
-        else if (Number.isInteger(event)) {
-            value = event
-        }
-        else if ("checked" in (event?.target ?? {}) && event?.target?.value == "on") {
-            value = event?.target?.checked
+            value = event;
+        } else if (Number.isInteger(event)) {
+            value = event;
+        } else if ("checked" in (event?.target ?? {}) && event?.target?.value === "on") {
+            value = event?.target?.checked;
         } else {
             value = event?.target?.value ?? null;
         }
 
-        setValue(sourceContext.getSource(field), value, { shouldValidate: true, shouldDirty: true });
-        clearErrors(sourceContext.getSource(field))
+        setLocalValues(prev => ({
+            ...prev,
+            [field]: value,
+        }));
     };
+
+    const handleSave = () => {
+        Object.entries(localValues).forEach(([field, value]) => {
+            setValue(sourceContext.getSource(field), value, { shouldValidate: true, shouldDirty: true });
+            clearErrors(sourceContext.getSource(field));
+        });
+        setOpen(false);
+    };
+
     const record = getValues(`terms.[${index}]`)
 
 
@@ -112,7 +146,7 @@ const RowEditor = () => {
                         <TextInput
                             source={`name`}
                             fullWidth
-                            onChange={(e) => handleSave("name", e)}
+                            onChange={(e) => handleLocalChange("name", e)}
                             helperText={errors?.terms?.[index]?.name?.message}
                             sx={{
                                 '& .MuiFormHelperText-root, & label': {
@@ -121,9 +155,21 @@ const RowEditor = () => {
                             }}
                         />
 
+                        <TextInput
+                            source={`comment`}
+                            fullWidth
+                            onChange={(e) => handleLocalChange("comment", e)}
+                            helperText={errors?.terms?.[index]?.comment?.message}
+                            sx={{
+                                '& .MuiFormHelperText-root, & label': {
+                                    color: errors?.terms?.[index]?.comment ? 'error.main' : undefined
+                                }
+                            }}
+                        />
+
                         <BooleanInput
                             source="enabled"
-                            onChange={(e) => handleSave("enabled", e)}
+                            onChange={(e) => handleLocalChange("enabled", e)}
                             helperText={errors?.terms?.[index]?.enabled?.message}
                             sx={{
                                 '& .MuiFormHelperText-root, & label': {
@@ -134,7 +180,7 @@ const RowEditor = () => {
 
                         <BooleanInput
                             source="logging"
-                            onChange={(e) => handleSave("logging", e)}
+                            onChange={(e) => handleLocalChange("logging", e)}
                             helperText={errors?.terms?.[index]?.logging?.message}
                             sx={{
                                 '& .MuiFormHelperText-root, & label': {
@@ -149,7 +195,7 @@ const RowEditor = () => {
                         >
                             <AutocompleteInput
                                 label="Nested Policy"
-                                onChange={(e) => handleSave("nested_policy_id", e)}
+                                onChange={(e) => handleLocalChange("nested_policy_id", e)}
                                 helperText={errors?.terms?.[index]?.nested_policy_id?.message}
                                 sx={{
                                     '& .MuiFormHelperText-root, & label': {
@@ -168,7 +214,7 @@ const RowEditor = () => {
                                 { id: 'tcp-initial', name: 'TCP Initial' }
                             ]}
                             resettable
-                            onChange={(e) => handleSave("option", e)}
+                            onChange={(e) => handleLocalChange("option", e)}
                             helperText={errors?.terms?.[index]?.option?.message}
                             sx={{
                                 '& .MuiFormHelperText-root, & label': {
@@ -186,7 +232,7 @@ const RowEditor = () => {
                             ]}
                             optionText={<ActionChip />}
                             resettable
-                            onChange={(e) => handleSave("action", e)}
+                            onChange={(e) => handleLocalChange("action", e)}
                             helperText={errors?.terms?.[index]?.action?.message}
                             sx={{
                                 '& .MuiFormHelperText-root, & label': {
@@ -202,7 +248,7 @@ const RowEditor = () => {
                             <AutocompleteArrayInput
                                 onChange={(e) => {
                                     console.log(e);
-                                    handleSave("source_networks", e)
+                                    handleLocalChange("source_networks", e)
                                 }}
                                 helperText={errors?.terms?.[index]?.source_networks?.message}
                                 sx={{
@@ -217,7 +263,7 @@ const RowEditor = () => {
                         <BooleanInput
                             source="negate_source_networks"
                             label="Negate source"
-                            onChange={(e) => handleSave("negate_source_networks", e)}
+                            onChange={(e) => handleLocalChange("negate_source_networks", e)}
                             helperText={errors?.terms?.[index]?.negate_source_networks?.message}
                             sx={{
 
@@ -232,7 +278,7 @@ const RowEditor = () => {
                             reference="networks"
                         >
                             <AutocompleteArrayInput
-                                onChange={(e) => { console.log(e); handleSave("destination_networks", e) }}
+                                onChange={(e) => { console.log(e); handleLocalChange("destination_networks", e) }}
                                 helperText={errors?.terms?.[index]?.destination_networks?.message}
                                 sx={{
 
@@ -246,7 +292,7 @@ const RowEditor = () => {
                         <BooleanInput
                             source="negate_destination_networks"
                             label="Negate destination"
-                            onChange={(e) => handleSave("negate_destination_networks", e)}
+                            onChange={(e) => handleLocalChange("negate_destination_networks", e)}
                             helperText={errors?.terms?.[index]?.negate_destination_networks?.message}
                             sx={{
 
@@ -261,7 +307,7 @@ const RowEditor = () => {
                             reference="services"
                         >
                             <AutocompleteArrayInput
-                                onChange={(e) => { console.log(e); handleSave("source_services", e) }}
+                                onChange={(e) => { console.log(e); handleLocalChange("source_services", e) }}
                                 helperText={errors?.terms?.[index]?.source_services?.message}
                                 sx={{
 
@@ -277,7 +323,7 @@ const RowEditor = () => {
                             reference="services"
                         >
                             <AutocompleteArrayInput
-                                onChange={(e) => { console.log(e); handleSave("destination_services", e) }}
+                                onChange={(e) => { console.log(e); handleLocalChange("destination_services", e) }}
                                 helperText={errors?.terms?.[index]?.destination_services?.message}
                                 sx={{
 
@@ -290,6 +336,7 @@ const RowEditor = () => {
                     </Form>
                 </DialogContent>
                 <DialogActions>
+                    <Button onClick={() => handleSave()}>Save</Button>
                     <Button onClick={() => setOpen(false)}>Close</Button>
                 </DialogActions>
             </Dialog>
@@ -480,6 +527,7 @@ const PolicyShowActions = () => {
 
 const PolicyListFilters = [
     <TextInput label="Search" source="q" alwaysOn />,
+    <BooleanInput source="edited" label="Synchronized" format={(value) => !value} parse={(value) => !value} />
 ];
 
 
@@ -534,7 +582,13 @@ export const PolicyShow = () => {
         <Show actions={<PolicyShowActions />}>
 
             <SimpleShowLayout>
+
                 <TextField source="name" />
+                <TextField source="comment" />
+
+                <BooleanField source="edited" label="Synchronized" valueLabelTrue="No" valueLabelFalse="Yes" TrueIcon={CloseIcon} FalseIcon={CheckIcon} />
+            </SimpleShowLayout>
+            <SimpleShowLayout>
                 <TextField source="comment" />
             </SimpleShowLayout>
             <SimpleShowLayout direction="row">

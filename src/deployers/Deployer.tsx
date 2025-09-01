@@ -17,7 +17,6 @@ const DeployerFilters = [
     <TextInput label="Search" source="q" alwaysOn />,
     <ReferenceInput source="target_id" reference='targets' resettable />,
     <SelectInput source="mode" choices={[
-        { id: 'proxmox_nft', name: 'Proxmox Nft' },
         { id: 'netmiko', name: 'Netmiko' },
         { id: 'git', name: 'Git' },
         { id: 'http', name: 'HTTP' },
@@ -39,7 +38,6 @@ export const DeployerList = () => (
             <TextField source="name" />
             <ReferenceField source="target" reference='targets' />
             <SelectField source="mode" choices={[
-                { id: 'proxmox_nft', name: 'Proxmox Nft' },
                 { id: 'netmiko', name: 'Netmiko' },
                 { id: 'git', name: 'Git' },
                 { id: 'http', name: 'HTTP' },
@@ -60,19 +58,7 @@ export const DeployerCreate = () => {
             target: data.target,
             mode: data.mode,
         }
-        if (data.mode == "proxmox_nft") {
-            send_data = {
-                ...send_data,
-                config: {
-                    host: data.host,
-                    username: data.username,
-                    port: data.port,
-                    password_envvar: data.password_envvar,
-                    ssh_key_envvar: data.ssh_key_envvar,
-                }
-            }
-        }
-        else if (data.mode == "netmiko") {
+        if (data.mode == "netmiko") {
             send_data = {
                 ...send_data,
                 config: {
@@ -105,24 +91,11 @@ export const DeployerCreate = () => {
                 <TextInput source="name" validate={required()} />
                 <ReferenceInput source="target" reference='targets' />
                 <SelectInput source="mode" choices={[
-                    { id: 'proxmox_nft', name: 'Proxmox Nft' },
                     { id: 'netmiko', name: 'Netmiko' },
                     { id: 'git', name: 'Git' },
                     { id: 'http', name: 'HTTP' },
                     { id: 'custom', name: 'Custom' }
                 ]} />
-                <FormDataConsumer<{ move: string }>>
-                    {({ formData }) => formData.mode == "proxmox_nft" &&
-                        <><Typography variant="h6">Config</Typography>
-                            <TextInput source="host" label="Host" />
-                            <TextInput source="username" label="Username" />
-                            <NumberInput source="port_envvar" label="Port" />
-
-                            <TextInput source="password_envvar" label="Password Env var" />
-                            <TextInput source="ssh_key_envvar" label="SSH Key Env var" />
-                        </>
-                    }
-                </FormDataConsumer>
                 <FormDataConsumer<{ move: string }>>
                     {({ formData }) => formData.mode == "netmiko" &&
                         <><Typography variant="h6">Config</Typography>
@@ -178,19 +151,7 @@ const DeployerInsideShow = () => {
     const record = useRecordContext();
     if (!record) return null;
 
-    if (record.mode == "proxmox_nft") {
-        return (
-            <SimpleShowLayout>
-                <TextField source="config.host" label="Host" />
-                <TextField source="config.username" label="Username" />
-                <TextField source="config.port" label="Port" />
-
-                <TextField source="config.password_envvar" label="Password Environment variable" />
-                <TextField source="config.ssh_key_envvar" label="SSH Key Environment variable" />
-            </SimpleShowLayout>
-        );
-    }
-    else if (record.mode == "netmiko") {
+    if (record.mode == "netmiko") {
         return (
             <SimpleShowLayout>
                 <TextField source="config.host" label="Host" />
@@ -241,7 +202,6 @@ export const DeployerShow = () => {
             <SimpleShowLayout >
                 <TextField source="name" />
                 <SelectField source="mode" choices={[
-                    { id: 'proxmox_nft', name: 'Proxmox Nft' },
                     { id: 'netmiko', name: 'Netmiko' },
                     { id: 'git', name: 'Git' },
                     { id: 'http', name: 'HTTP' },

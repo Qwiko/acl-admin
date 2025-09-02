@@ -1,8 +1,8 @@
 
-import { ArrayField, ArrayInput, BulkDeleteButton, ChipField, Create, Datagrid, DateField, Edit, EditButton, InfiniteList, ReferenceArrayField, ReferenceArrayInput, required, SelectArrayInput, SelectField, SelectInput, SimpleForm, SimpleFormIterator, SingleFieldList, TextField, TextInput } from 'react-admin';
+import { ArrayField, ArrayInput, BulkDeleteButton, ChipField, Create, Datagrid, DateField, Edit, EditButton, InfiniteList, ReferenceArrayField, ReferenceArrayInput, ReferenceField, ReferenceInput, required, SelectArrayInput, SelectField, SelectInput, Show, SimpleForm, SimpleFormIterator, SimpleShowLayout, SingleFieldList, TextField, TextInput } from 'react-admin';
 
-
-
+import { DeleteButton, TopToolbar } from 'react-admin';
+import { DefaultPagination } from '../shared/Shared';
 const TargetFilters = [
     <TextInput label="Search" source="q" alwaysOn />,
     <ReferenceArrayInput source="generator" reference='target_generators' />,
@@ -47,7 +47,7 @@ export const TargetEdit = () => (
                 { id: 'inet6', name: 'IPv6' },
                 { id: 'mixed', name: 'IPv4 & IPv6' },
             ]} resettable />
-            <ArrayInput source="replacements">
+            <ArrayInput source="substitutions">
                 <SimpleFormIterator inline>
                     <TextInput source="pattern" />
                     <TextInput source="replacement" />
@@ -69,7 +69,7 @@ export const TargetCreate = () => (
                 { id: 'inet6', name: 'IPv6' },
                 { id: 'mixed', name: 'IPv4 & IPv6' },
             ]} resettable />
-            <ArrayInput source="replacements">
+            <ArrayInput source="substitutions">
                 <SimpleFormIterator inline>
                     <TextInput source="pattern" />
                     <TextInput source="replacement" />
@@ -81,7 +81,7 @@ export const TargetCreate = () => (
     </Create>
 );
 
-import { DeleteButton, TopToolbar } from 'react-admin';
+
 
 const TargetShowActions = () => {
     return (
@@ -93,19 +93,10 @@ const TargetShowActions = () => {
 }
 
 
-import { ReferenceField, ReferenceInput, Show, SimpleShowLayout } from 'react-admin';
-
-import { useParams } from 'react-router-dom';
+const CustomSubstitutionEmpty = () => <div>No substitutions found</div>;
 
 
-const CustomReplacementEmpty = () => <div>No Replacements found</div>;
-
-import { useNotify, useRefresh } from 'react-admin';
-import { DefaultPagination } from '../shared/Shared';
 export const TargetShow = () => {
-    const { id } = useParams();
-    const refresh = useRefresh();
-    const notify = useNotify();
     return (
         <Show actions={<TargetShowActions />}>
             <SimpleShowLayout >
@@ -119,8 +110,8 @@ export const TargetShow = () => {
                 ]} />
             </SimpleShowLayout>
             <SimpleShowLayout direction="row">
-                <ArrayField source="replacements" >
-                    <Datagrid hover={false} empty={<CustomReplacementEmpty />} bulkActionButtons={false} rowClick={false}>
+                <ArrayField source="substitutions" >
+                    <Datagrid hover={false} empty={<CustomSubstitutionEmpty />} bulkActionButtons={false} rowClick={false}>
                         <TextField source="pattern" sortable={false} />
                         <TextField source="replacement" sortable={false} />
                     </Datagrid>
@@ -151,7 +142,6 @@ export const TargetShow = () => {
                     </SingleFieldList>
                 </ReferenceArrayField>
             </SimpleShowLayout>
-
         </Show>
     );
 }

@@ -31,6 +31,7 @@ export const DynamicPolicyEdit = () => (
         <SimpleForm>
             <TextInput source="name" validate={required()} />
             <TextInput source="comment" />
+            <TextInput source="custom_aerleon_header" label="Custom Aerleon Header" />
             <SelectInput source="filter_action" choices={[
                 { id: 'accept', name: 'Accept' },
                 { id: 'deny', name: 'Deny' },
@@ -56,6 +57,7 @@ export const DynamicPolicyCreate = () => (
         <SimpleForm>
             <TextInput source="name" validate={required()} />
             <TextInput source="comment" />
+            <TextInput source="custom_aerleon_header" label="Custom Aerleon Header" />
             <SelectInput source="filter_action" choices={[
                 { id: 'accept', name: 'Accept' },
                 { id: 'deny', name: 'Deny' },
@@ -132,6 +134,7 @@ export const DynamicPolicyShow = () => {
             </SimpleShowLayout>
             <SimpleShowLayout>
                 <TextField source="comment" />
+                <TextField source="custom_aerleon_header" label="Custom Aerleon Header" />
             </SimpleShowLayout>
             <SimpleShowLayout direction="row">
                 <DateField source="created_at" />

@@ -445,6 +445,7 @@ export const PolicyEdit = () => (
         <SimpleForm>
             <TextInput source="name" validate={required()} />
             <TextInput source="comment" />
+            <TextInput source="custom_aerleon_header" label="Custom Aerleon Header" />
             <ReferenceArrayInput source="targets" reference='targets' />
             <ReferenceArrayInput source="tests" reference='tests' />
 
@@ -469,6 +470,7 @@ export const PolicyCreate = () => (
         <SimpleForm>
             <TextInput source="name" validate={required()} />
             <TextInput source="comment" />
+            <TextInput source="custom_aerleon_header" label="Custom Aerleon Header" />
             <ReferenceArrayInput source="targets" reference='targets' />
             <ReferenceArrayInput source="tests" reference='tests' />
 
@@ -585,7 +587,7 @@ export const PolicyShow = () => {
 
                 <TextField source="name" />
                 <TextField source="comment" />
-
+                <TextField source="custom_aerleon_header" label="Custom Aerleon Header" />
                 <BooleanField source="edited" label="Synchronized" valueLabelTrue="No" valueLabelFalse="Yes" TrueIcon={CloseIcon} FalseIcon={CheckIcon} />
             </SimpleShowLayout>
             <SimpleShowLayout>

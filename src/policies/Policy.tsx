@@ -15,7 +15,6 @@ import { ActionChip, ColoredBooleanField, DefaultPagination, ReferenceNetworks, 
 import { useSimpleFormIteratorItem } from 'react-admin';
 import { useParams } from "react-router-dom";
 
-
 import AppBar from '@mui/material/AppBar';
 import Dialog from '@mui/material/Dialog';
 import IconButton from '@mui/material/IconButton';
@@ -452,25 +451,61 @@ const DraggableRow = () => {
                     }}
                 />
             )}
+
             <FormDataConsumer>
                 {({ scopedFormData }) => (
-                    <Tooltip title="Name">
-                        <Typography>{scopedFormData?.name || 'Empty'}</Typography>
-                    </Tooltip>
-                )}
-            </FormDataConsumer>
-            <FormDataConsumer>
-                {({ scopedFormData }) => (
-                    <Tooltip title="Enabled">
-                        {
-                            (Object.keys(scopedFormData).includes('enabled') && scopedFormData?.enabled) ?
-                                <CheckCircleIcon color='success' /> : <CancelIcon color='error' />
-                        }
-                    </Tooltip>
+                    <>
+                        <Tooltip title="Name">
+                            <Typography>{scopedFormData?.name || 'Empty'}</Typography>
+                        </Tooltip>
+                        <Tooltip title="Comment">
+                            <Typography>{scopedFormData?.comment}</Typography>
+                        </Tooltip>
+                        {!scopedFormData?.nested_policy_id && (
+                            <>
+                                <Tooltip title="Source Networks">
+                                    <Typography>{(scopedFormData?.negate_source_networks ? 'Not ' : '') + (scopedFormData?.source_networks ? scopedFormData?.source_networks.length + ' networks' : 'Any')}</Typography>
+                                </Tooltip>
+                                <Tooltip title="Destination Networks">
+                                    <Typography>{(scopedFormData?.negate_destination_networks ? 'Not ' : '') + (scopedFormData?.destination_networks ? scopedFormData?.destination_networks.length + ' networks' : 'Any')}</Typography>
+                                </Tooltip>
+                                <Tooltip title="Source Services">
+                                    <Typography>{scopedFormData?.source_services ? scopedFormData?.source_services.length + ' services' : 'Any'}</Typography>
+                                </Tooltip>
+                                <Tooltip title="Destination Services">
+                                    <Typography>{scopedFormData?.destination_services ? scopedFormData?.destination_services.length + ' services' : 'Any'}</Typography>
+                                </Tooltip>
+                                <Tooltip title="Option">
+                                    <Typography sx={{ textTransform: 'capitalize' }}>{scopedFormData?.option}</Typography>
+                                </Tooltip>
+                                <Tooltip title="Action">
+                                    <Typography sx={{ textTransform: 'capitalize' }}>{scopedFormData?.action}</Typography>
+                                </Tooltip>
+                                <Tooltip title="Logging">
+                                    {
+                                        (Object.keys(scopedFormData).includes('logging') && scopedFormData?.logging) ?
+                                            <CheckCircleIcon color='success' /> : <CancelIcon color='error' />
+                                    }
+                                </Tooltip>
+                            </>
+                        )}
+
+                        {scopedFormData?.nested_policy_id && (
+                            <ReferenceField source="nested_policy_id" reference="policies" link="show" />
+                        )}
+
+
+                        <Tooltip title="Enabled">
+                            {
+                                (Object.keys(scopedFormData).includes('enabled') && scopedFormData?.enabled) ?
+                                    <CheckCircleIcon color='success' /> : <CancelIcon color='error' />
+                            }
+                        </Tooltip>
+                    </>
                 )}
             </FormDataConsumer>
             <RowEditor />
-        </Box>
+        </Box >
     );
 };
 
@@ -490,11 +525,9 @@ export const PolicyEdit = () => (
                     addButton={<TermsAddButton
                     />}
                 >
-
                     <DraggableRow />
                 </SimpleFormIterator>
             </ArrayInput>
-
         </SimpleForm>
     </Edit >
 );
@@ -514,7 +547,6 @@ export const PolicyCreate = () => (
                     disableReordering
                     addButton={<TermsAddButton />}
                 >
-
                     <DraggableRow />
                 </SimpleFormIterator>
             </ArrayInput>

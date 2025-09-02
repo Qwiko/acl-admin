@@ -6,7 +6,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
 import CloseIcon from '@mui/icons-material/Close';
 import HistoryIcon from '@mui/icons-material/History';
-import { Box, Tooltip, Typography } from "@mui/material";
+import { Box, DialogContent, Tooltip, Typography } from "@mui/material";
 import React, { useEffect, useState } from 'react';
 import { ArrayField, ArrayInput, AutocompleteArrayInput, AutocompleteInput, BooleanField, BooleanInput, BulkDeleteButton, Button, ButtonProps, ChipField, Create, Datagrid, DateField, DeleteButton, Edit, EditButton, Form, IconButtonWithTooltip, InfiniteList, Link, ReferenceArrayField, ReferenceArrayInput, ReferenceField, ReferenceInput, required, SelectField, SelectInput, Show, ShowButton, SimpleForm, SimpleFormIterator, SimpleShowLayout, SingleFieldList, TextField, TextInput, TopToolbar, useDataProvider, useNotify, useRefresh, useSimpleFormIterator } from 'react-admin';
 
@@ -15,6 +15,11 @@ import { ActionChip, ColoredBooleanField, DefaultPagination, ReferenceNetworks, 
 import { useSimpleFormIteratorItem } from 'react-admin';
 import { useParams } from "react-router-dom";
 
+
+import AppBar from '@mui/material/AppBar';
+import Dialog from '@mui/material/Dialog';
+import IconButton from '@mui/material/IconButton';
+import Toolbar from '@mui/material/Toolbar';
 
 const PolicyBulkActionButtons = () => (
     <>
@@ -35,12 +40,6 @@ export const PolicyList = () => (
 );
 
 
-import {
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle
-} from "@mui/material";
 import {
     FormDataConsumer,
     useSourceContext
@@ -139,8 +138,25 @@ const RowEditor = () => {
         <>
             <RowEditButton onClick={() => setOpen(true)} />
 
-            <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
-                <DialogTitle>Edit</DialogTitle>
+            <Dialog fullScreen open={open} onClose={() => setOpen(false)} fullWidth>
+                <AppBar sx={{ position: 'relative' }}>
+                    <Toolbar>
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            onClick={() => setOpen(false)}
+                            aria-label="close"
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                        <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                            Edit Term
+                        </Typography>
+                        <Button autoFocus color="inherit" onClick={() => handleSave()}>
+                            Save
+                        </Button>
+                    </Toolbar>
+                </AppBar>
                 <DialogContent>
                     <Form record={record} noValidate onSubmit={() => { }}>
                         <TextInput
@@ -154,7 +170,6 @@ const RowEditor = () => {
                                 }
                             }}
                         />
-
                         <TextInput
                             source={`comment`}
                             fullWidth
@@ -166,142 +181,81 @@ const RowEditor = () => {
                                 }
                             }}
                         />
+                        <Typography variant="h6" gutterBottom>
+                            Networks
+                        </Typography>
+                        <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
+                            <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
+                                <ReferenceArrayInput
+                                    source="source_networks"
+                                    reference="networks"
+                                >
+                                    <AutocompleteArrayInput
+                                        onChange={(e) => {
+                                            console.log(e);
+                                            handleLocalChange("source_networks", e)
+                                        }}
+                                        helperText={errors?.terms?.[index]?.source_networks?.message}
+                                        sx={{
 
-                        <BooleanInput
-                            source="enabled"
-                            onChange={(e) => handleLocalChange("enabled", e)}
-                            helperText={errors?.terms?.[index]?.enabled?.message}
-                            sx={{
-                                '& .MuiFormHelperText-root, & label': {
-                                    color: errors?.terms?.[index]?.enabled ? 'error.main' : undefined
-                                }
-                            }}
-                        />
+                                            '& .MuiFormHelperText-root, & label': {
+                                                color: errors?.terms?.[index]?.source_networks ? 'error.main' : undefined
+                                            }
+                                        }}
+                                    />
+                                </ReferenceArrayInput>
+                            </Box>
+                            <Box flex={0.2} ml={{ xs: 0, sm: '0.5em' }}>
+                                <BooleanInput
+                                    source="negate_source_networks"
+                                    label="Negate source"
+                                    onChange={(e) => handleLocalChange("negate_source_networks", e)}
+                                    helperText={errors?.terms?.[index]?.negate_source_networks?.message}
+                                    sx={{
 
-                        <BooleanInput
-                            source="logging"
-                            onChange={(e) => handleLocalChange("logging", e)}
-                            helperText={errors?.terms?.[index]?.logging?.message}
-                            sx={{
-                                '& .MuiFormHelperText-root, & label': {
-                                    color: errors?.terms?.[index]?.logging ? 'error.main' : undefined
-                                }
-                            }}
-                        />
+                                        '& .MuiFormHelperText-root, & label': {
+                                            color: errors?.terms?.[index]?.negate_source_networks ? 'error.main' : undefined
+                                        }
+                                    }}
+                                />
+                            </Box>
+                        </Box>
+                        <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
+                            <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
+                                <ReferenceArrayInput
+                                    source="destination_networks"
+                                    reference="networks"
+                                >
+                                    <AutocompleteArrayInput
+                                        onChange={(e) => { console.log(e); handleLocalChange("destination_networks", e) }}
+                                        helperText={errors?.terms?.[index]?.destination_networks?.message}
+                                        sx={{
 
-                        <ReferenceInput
-                            source="nested_policy_id"
-                            reference="policies"
-                        >
-                            <AutocompleteInput
-                                label="Nested Policy"
-                                onChange={(e) => handleLocalChange("nested_policy_id", e)}
-                                helperText={errors?.terms?.[index]?.nested_policy_id?.message}
-                                sx={{
-                                    '& .MuiFormHelperText-root, & label': {
-                                        color: errors?.terms?.[index]?.nested_policy_id ? 'error.main' : undefined
-                                    }
-                                }}
-                            />
-                        </ReferenceInput>
+                                            '& .MuiFormHelperText-root, & label': {
+                                                color: errors?.terms?.[index]?.destination_networks ? 'error.main' : undefined
+                                            }
+                                        }}
+                                    />
+                                </ReferenceArrayInput>
+                            </Box>
+                            <Box flex={0.2} ml={{ xs: 0, sm: '0.5em' }}>
+                                <BooleanInput
+                                    source="negate_destination_networks"
+                                    label="Negate destination"
+                                    onChange={(e) => handleLocalChange("negate_destination_networks", e)}
+                                    helperText={errors?.terms?.[index]?.negate_destination_networks?.message}
+                                    sx={{
 
-                        <SelectInput
-                            source="option"
-                            choices={[
-                                { id: 'established', name: 'Established' },
-                                { id: 'is-fragment', name: 'Is Fragment' },
-                                { id: 'tcp-established', name: 'TCP Established' },
-                                { id: 'tcp-initial', name: 'TCP Initial' }
-                            ]}
-                            resettable
-                            onChange={(e) => handleLocalChange("option", e)}
-                            helperText={errors?.terms?.[index]?.option?.message}
-                            sx={{
-                                '& .MuiFormHelperText-root, & label': {
-                                    color: errors?.terms?.[index]?.nested_policy_id ? 'error.main' : undefined
-                                }
-                            }}
-                        />
-
-                        <SelectInput
-                            source="action"
-                            choices={[
-                                { id: 'accept', name: 'Accept' },
-                                { id: 'deny', name: 'Deny' },
-                                { id: 'reject', name: 'Reject' },
-                            ]}
-                            optionText={<ActionChip />}
-                            resettable
-                            onChange={(e) => handleLocalChange("action", e)}
-                            helperText={errors?.terms?.[index]?.action?.message}
-                            sx={{
-                                '& .MuiFormHelperText-root, & label': {
-                                    color: errors?.terms?.[index]?.action ? 'error.main' : undefined
-                                }
-                            }}
-                        />
-
-                        <ReferenceArrayInput
-                            source="source_networks"
-                            reference="networks"
-                        >
-                            <AutocompleteArrayInput
-                                onChange={(e) => {
-                                    console.log(e);
-                                    handleLocalChange("source_networks", e)
-                                }}
-                                helperText={errors?.terms?.[index]?.source_networks?.message}
-                                sx={{
-
-                                    '& .MuiFormHelperText-root, & label': {
-                                        color: errors?.terms?.[index]?.source_networks ? 'error.main' : undefined
-                                    }
-                                }}
-                            />
-                        </ReferenceArrayInput>
-
-                        <BooleanInput
-                            source="negate_source_networks"
-                            label="Negate source"
-                            onChange={(e) => handleLocalChange("negate_source_networks", e)}
-                            helperText={errors?.terms?.[index]?.negate_source_networks?.message}
-                            sx={{
-
-                                '& .MuiFormHelperText-root, & label': {
-                                    color: errors?.terms?.[index]?.negate_source_networks ? 'error.main' : undefined
-                                }
-                            }}
-                        />
-
-                        <ReferenceArrayInput
-                            source="destination_networks"
-                            reference="networks"
-                        >
-                            <AutocompleteArrayInput
-                                onChange={(e) => { console.log(e); handleLocalChange("destination_networks", e) }}
-                                helperText={errors?.terms?.[index]?.destination_networks?.message}
-                                sx={{
-
-                                    '& .MuiFormHelperText-root, & label': {
-                                        color: errors?.terms?.[index]?.destination_networks ? 'error.main' : undefined
-                                    }
-                                }}
-                            />
-                        </ReferenceArrayInput>
-
-                        <BooleanInput
-                            source="negate_destination_networks"
-                            label="Negate destination"
-                            onChange={(e) => handleLocalChange("negate_destination_networks", e)}
-                            helperText={errors?.terms?.[index]?.negate_destination_networks?.message}
-                            sx={{
-
-                                '& .MuiFormHelperText-root, & label': {
-                                    color: errors?.terms?.[index]?.negate_destination_networks ? 'error.main' : undefined
-                                }
-                            }}
-                        />
-
+                                        '& .MuiFormHelperText-root, & label': {
+                                            color: errors?.terms?.[index]?.negate_destination_networks ? 'error.main' : undefined
+                                        }
+                                    }}
+                                />
+                            </Box>
+                        </Box>
+                        <Typography variant="h6" gutterBottom>
+                            Services
+                        </Typography>
                         <ReferenceArrayInput
                             source="source_services"
                             reference="services"
@@ -317,7 +271,6 @@ const RowEditor = () => {
                                 }}
                             />
                         </ReferenceArrayInput>
-
                         <ReferenceArrayInput
                             source="destination_services"
                             reference="services"
@@ -333,13 +286,94 @@ const RowEditor = () => {
                                 }}
                             />
                         </ReferenceArrayInput>
+                        <Typography variant="h6" gutterBottom>
+                            Options
+                        </Typography>
+                        <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
+                            <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
+                                <SelectInput
+                                    source="option"
+                                    choices={[
+                                        { id: 'established', name: 'Established' },
+                                        { id: 'is-fragment', name: 'Is Fragment' },
+                                        { id: 'tcp-established', name: 'TCP Established' },
+                                        { id: 'tcp-initial', name: 'TCP Initial' }
+                                    ]}
+                                    resettable
+                                    onChange={(e) => handleLocalChange("option", e)}
+                                    helperText={errors?.terms?.[index]?.option?.message}
+                                    sx={{
+                                        '& .MuiFormHelperText-root, & label': {
+                                            color: errors?.terms?.[index]?.nested_policy_id ? 'error.main' : undefined
+                                        }
+                                    }}
+                                />
+                            </Box>
+                            <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
+
+                                <SelectInput
+                                    source="action"
+                                    choices={[
+                                        { id: 'accept', name: 'Accept' },
+                                        { id: 'deny', name: 'Deny' },
+                                        { id: 'reject', name: 'Reject' },
+                                    ]}
+                                    optionText={<ActionChip />}
+                                    resettable
+                                    onChange={(e) => handleLocalChange("action", e)}
+                                    helperText={errors?.terms?.[index]?.action?.message}
+                                    sx={{
+                                        '& .MuiFormHelperText-root, & label': {
+                                            color: errors?.terms?.[index]?.action ? 'error.main' : undefined
+                                        }
+                                    }}
+                                />
+                            </Box>
+                        </Box>
+                        <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
+
+                            <BooleanInput
+                                source="enabled"
+                                onChange={(e) => handleLocalChange("enabled", e)}
+                                helperText={errors?.terms?.[index]?.enabled?.message}
+                                sx={{
+                                    '& .MuiFormHelperText-root, & label': {
+                                        color: errors?.terms?.[index]?.enabled ? 'error.main' : undefined
+                                    }
+                                }}
+                            />
+                            <BooleanInput
+                                source="logging"
+                                onChange={(e) => handleLocalChange("logging", e)}
+                                helperText={errors?.terms?.[index]?.logging?.message}
+                                sx={{
+                                    '& .MuiFormHelperText-root, & label': {
+                                        color: errors?.terms?.[index]?.logging ? 'error.main' : undefined
+                                    }
+                                }}
+                            />
+                        </Box>
+                        <Typography variant="h6" gutterBottom>
+                            Nested Policy
+                        </Typography>
+                        <ReferenceInput
+                            source="nested_policy_id"
+                            reference="policies"
+                        >
+                            <AutocompleteInput
+                                label="Nested Policy"
+                                onChange={(e) => handleLocalChange("nested_policy_id", e)}
+                                helperText={errors?.terms?.[index]?.nested_policy_id?.message}
+                                sx={{
+                                    '& .MuiFormHelperText-root, & label': {
+                                        color: errors?.terms?.[index]?.nested_policy_id ? 'error.main' : undefined
+                                    }
+                                }}
+                            />
+                        </ReferenceInput>
                     </Form>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => handleSave()}>Save</Button>
-                    <Button onClick={() => setOpen(false)}>Close</Button>
-                </DialogActions>
-            </Dialog>
+                </DialogContent >
+            </Dialog >
         </>
     );
 };

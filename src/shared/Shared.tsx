@@ -1,11 +1,9 @@
-import EditIcon from '@mui/icons-material/Edit';
-import { Chip, DialogActions } from '@mui/material';
-import { InfinitePagination, BooleanField, BooleanFieldProps, ChipField, Pagination, ReferenceArrayField, ReferenceArrayFieldViewProps, SingleFieldList, useRecordContext, useResourceContext } from 'react-admin';
+import { Chip } from '@mui/material';
+import { BooleanField, BooleanFieldProps, ChipField, InfinitePagination, ReferenceArrayField, ReferenceArrayFieldViewProps, SingleFieldList, useRecordContext } from 'react-admin';
 
-import { Box, Card, Typography, Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { Box, Card, Typography } from '@mui/material';
 
-import React, { useState, cloneElement } from 'react';
-import { useListContext, useNotify, useRefresh, useUpdate } from 'react-admin';
+import { useListContext } from 'react-admin';
 
 
 export const ColoredBooleanField = (props: BooleanFieldProps) => {
@@ -66,7 +64,7 @@ export const ReferenceServices = (props: ReferenceArrayFieldViewProps) => {
 };
 
 export const DefaultPagination = () => {
-const { total } = useListContext();
+    const { total } = useListContext();
     return (
         <>
             <InfinitePagination />

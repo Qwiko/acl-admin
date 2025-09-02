@@ -1,17 +1,15 @@
 
-import { InfiniteList, ArrayInput, SimpleFormIterator, ArrayField, Show, SimpleShowLayout, Button, ChipField, CloneButton, Create, Datagrid, DateField, Edit, EditButton, Link, NumberField, NumberInput, ReferenceArrayField, ReferenceArrayInput, required, SelectField, SelectInput, ShowButton, SimpleForm, SingleFieldList, TextField, TextInput } from 'react-admin';
+import { ArrayField, ArrayInput, ChipField, Create, Datagrid, DateField, Edit, EditButton, InfiniteList, NumberField, NumberInput, ReferenceArrayField, ReferenceArrayInput, required, SelectField, SelectInput, Show, SimpleForm, SimpleFormIterator, SimpleShowLayout, SingleFieldList, TextField, TextInput } from 'react-admin';
 
 
 import { useParams } from 'react-router-dom';
 
 import { ActionChip, DefaultPagination } from '../shared/Shared';
 
-import AddIcon from '@mui/icons-material/Add';
 
-import { BulkDeleteButton, List, useNotify, useRefresh } from 'react-admin';
+import { BulkDeleteButton, useNotify, useRefresh } from 'react-admin';
 
 import { DeleteButton, TopToolbar } from 'react-admin';
-import { Stack } from '@mui/material';
 
 
 const TestFilters = [
@@ -37,7 +35,7 @@ export const TestList = () => (
 );
 
 export const TestEdit = () => (
-    <Edit redirect="show">
+    <Edit redirect="show" mutationMode="pessimistic">
         <SimpleForm>
             <TextInput source="name" validate={required()} />
             <TextInput source="comment" />

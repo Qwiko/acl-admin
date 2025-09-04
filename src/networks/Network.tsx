@@ -1,14 +1,15 @@
 
-import { InfiniteList, ArrayInput, SimpleFormIterator, Button, CloneButton, Create, SingleFieldList, ChipField, CreateButton, Datagrid, DateField, Edit, EditButton, Link, ReferenceArrayField, ReferenceInput, required, ShowButton, SimpleForm, TextField, TextInput } from 'react-admin';
+import { ArrayInput, ChipField, Create, Datagrid, DateField, Edit, EditButton, InfiniteList, ReferenceArrayField, ReferenceInput, required, SimpleForm, SimpleFormIterator, SingleFieldList, TextField, TextInput } from 'react-admin';
 
 
-import { BulkDeleteButton, List } from 'react-admin';
-import AddIcon from '@mui/icons-material/Add';
+import { BulkDeleteButton } from 'react-admin';
 
+
+import { useNotify, useRefresh } from 'react-admin';
+import { DefaultPagination } from '../shared/Shared';
 
 const NetworkFilters = [
     <TextInput label="Search" source="q" alwaysOn />,
-    <TextInput label="Address" source="addresses__address" alwaysOn />,
 ];
 
 const NetworkBulkActionButtons = () => (
@@ -20,7 +21,7 @@ const NetworkBulkActionButtons = () => (
 
 export const NetworkList = () => {
     return (
-        <InfiniteList filters={NetworkFilters} pagination={<DefaultPagination />}>
+        <InfiniteList perPage={25} filters={NetworkFilters} pagination={<DefaultPagination />}>
             <Datagrid bulkActionButtons={<NetworkBulkActionButtons />}>
                 <TextField source="name" />
                 <DateField source="created_at" />
@@ -76,7 +77,6 @@ import { ArrayField, ReferenceField, Show, SimpleShowLayout, } from 'react-admin
 
 import { useParams } from 'react-router-dom';
 
-import { useRedirect } from 'react-admin';
 
 
 import { useDataProvider } from 'react-admin';
@@ -139,9 +139,6 @@ const NetworkUsageReferences = () => {
 };
 
 
-import { useNotify, useRefresh } from 'react-admin';
-import { Tooltip } from '@mui/material';
-import { DefaultPagination } from '../shared/Shared';
 
 export const NetworkShow = () => {
     const { id } = useParams();

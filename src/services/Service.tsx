@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 
-
+import { DefaultPagination } from '../shared/Shared';
 
 
 const ServiceFilters = [
@@ -21,7 +21,7 @@ const ServiceBulkActionButtons = () => (
 
 export const ServiceList = () => (
 
-    <InfiniteList filters={ServiceFilters}>
+    <InfiniteList perPage={25} filters={ServiceFilters} pagination={<DefaultPagination />}>
         <Datagrid bulkActionButtons={<ServiceBulkActionButtons />}>
             <TextField source="name" />
             <DateField source="created_at" />

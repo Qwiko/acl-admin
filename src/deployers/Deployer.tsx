@@ -1,16 +1,13 @@
 
-import { BulkDeleteButton, ChipField, Create, Datagrid, DateField, Edit, EditButton, NumberInput, ReferenceArrayField, ReferenceArrayInput, required, SelectArrayInput, SelectField, SelectInput, SimpleForm, SingleFieldList, TextField, TextInput, useRecordContext } from 'react-admin';
+import { BulkDeleteButton, Create, Datagrid, DateField, Edit, EditButton, NumberInput, required, SelectField, SelectInput, SimpleForm, TextField, TextInput, useRecordContext } from 'react-admin';
 
 
-import { InfiniteList, ReferenceField, ReferenceInput, Show, ShowButton, SimpleShowLayout } from 'react-admin';
+import { InfiniteList, ReferenceField, ReferenceInput, Show, SimpleShowLayout } from 'react-admin';
 
 
-import { useNotify, useRefresh, FormDataConsumer } from 'react-admin';
-import { useParams } from 'react-router-dom';
-import { DeleteButton, TopToolbar } from 'react-admin';
-import { List } from 'react-admin';
 import { Typography } from '@mui/material';
-import { ClassNames } from '@emotion/react';
+import { DeleteButton, FormDataConsumer, TopToolbar } from 'react-admin';
+import { useParams } from 'react-router-dom';
 import { DefaultPagination } from '../shared/Shared';
 
 const DeployerFilters = [
@@ -33,7 +30,7 @@ const DeployerBulkActionButtons = () => (
 );
 
 export const DeployerList = () => (
-    <InfiniteList filters={DeployerFilters} pagination={<DefaultPagination />} >
+    <InfiniteList perPage={25} filters={DeployerFilters} pagination={<DefaultPagination />} >
         <Datagrid bulkActionButtons={<DeployerBulkActionButtons />}>
             <TextField source="name" />
             <ReferenceField source="target" reference='targets' />

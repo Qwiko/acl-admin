@@ -15,7 +15,7 @@ const DynamicPolicyBulkActionButtons = () => (
 );
 
 export const DynamicPolicyList = () => (
-    <InfiniteList filters={DynamicPolicyListFilters} pagination={<DefaultPagination />} >
+    <InfiniteList perPage={25} filters={DynamicPolicyListFilters} pagination={<DefaultPagination />} >
         <Datagrid bulkActionButtons={<DynamicPolicyBulkActionButtons />}>
             <TextField source="name" />
             <TextField source="comment" />

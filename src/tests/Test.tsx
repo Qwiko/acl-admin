@@ -25,7 +25,7 @@ const TestBulkActionButtons = () => (
 
 
 export const TestList = () => (
-    <InfiniteList filters={TestFilters} pagination={<DefaultPagination />} >
+    <InfiniteList perPage={25} filters={TestFilters} pagination={<DefaultPagination />} >
         <Datagrid bulkActionButtons={<TestBulkActionButtons />} >
             <TextField source="name" />
             <DateField source="created_at" />

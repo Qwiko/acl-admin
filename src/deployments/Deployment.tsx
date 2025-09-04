@@ -1,14 +1,11 @@
 
-import { InfiniteList, BulkDeleteButton, ChipField, Create, Datagrid, DateField, Edit, EditButton, FunctionField, NumberInput, ReferenceArrayField, ReferenceArrayInput, required, RichTextField, SelectArrayInput, SelectField, SelectInput, SimpleForm, SingleFieldList, TabbedShowLayout, TextArrayInput, TextField, TextInput } from 'react-admin';
+import { BulkDeleteButton, Datagrid, DateField, FunctionField, InfiniteList, ReferenceArrayInput, TabbedShowLayout, TextArrayInput, TextField, TextInput } from 'react-admin';
 
 
-import { ReferenceField, ReferenceInput, Show, ShowButton, SimpleShowLayout } from 'react-admin';
+import { ReferenceField, Show } from 'react-admin';
 
-import { DefaultPagination } from '../shared/Shared';
-import { useNotify, useRefresh } from 'react-admin';
-import { useParams } from 'react-router-dom';
 import { DeleteButton, TopToolbar } from 'react-admin';
-import { List } from 'react-admin';
+import { DefaultPagination } from '../shared/Shared';
 
 const DeploymentFilters = [
     <TextInput label="Search" source="q" alwaysOn />,
@@ -25,7 +22,7 @@ const DeploymentBulkActionButtons = () => (
 );
 
 export const DeploymentList = () => (
-    <InfiniteList filters={DeploymentFilters} pagination={<DefaultPagination />} sort={{ field: 'created_at', order: 'DESC' }}>
+    <InfiniteList perPage={25} filters={DeploymentFilters} pagination={<DefaultPagination />} sort={{ field: 'created_at', order: 'DESC' }}>
         <Datagrid bulkActionButtons={<DeploymentBulkActionButtons />}>
             <FunctionField
                 source="status"
@@ -76,8 +73,8 @@ const DeploymentShowActions = () => {
     );
 }
 
-import { Fragment } from 'react/jsx-runtime';
 import { Chip } from '@mui/material';
+import { Fragment } from 'react/jsx-runtime';
 
 export const DeploymentShow = () => {
     return (

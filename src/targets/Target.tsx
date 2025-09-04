@@ -21,7 +21,7 @@ const TargetBulkActionButtons = () => (
 );
 
 export const TargetList = () => (
-    <InfiniteList filters={TargetFilters} pagination={<DefaultPagination />} >
+    <InfiniteList perPage={25} filters={TargetFilters} pagination={<DefaultPagination />} >
         <Datagrid bulkActionButtons={<TargetBulkActionButtons />}>
             <TextField source="name" />
             <ReferenceField source="generator" reference='target_generators' />

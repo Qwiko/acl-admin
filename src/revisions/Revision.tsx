@@ -1,13 +1,13 @@
 
 import {
-    InfiniteList,
     BulkDeleteButton,
     Button,
     Confirm,
-    Create, Datagrid, DateField, DeleteButton, Edit, EditButton, List, ReferenceArrayInput, ReferenceField, ReferenceInput, required, SimpleForm, TextField, TextInput, TopToolbar,
+    Create, Datagrid, DateField, DeleteButton, Edit, EditButton,
+    InfiniteList,
+    ReferenceArrayInput, ReferenceField, ReferenceInput, required, SimpleForm, TextField, TextInput, TopToolbar,
     useCreate,
-    useRecordContext,
-    useRedirect
+    useRecordContext
 } from 'react-admin';
 
 
@@ -19,6 +19,8 @@ import { Show, SimpleShowLayout } from 'react-admin';
 import { useState } from 'react';
 import { useParams } from "react-router-dom";
 
+import { useNavigate } from 'react-router-dom';
+import { DefaultPagination } from '../shared/Shared';
 import { RevisionCompare } from './RevisionCompare';
 
 const RevisionBulkActionButtons = () => (
@@ -37,7 +39,7 @@ const RevisionFilters = [
 export const RevisionList = () => {
     return (
 
-        <InfiniteList filters={RevisionFilters} sort={{ field: 'created_at', order: 'DESC' }} pagination={<DefaultPagination />} >
+        <InfiniteList perPage={25} filters={RevisionFilters} sort={{ field: 'created_at', order: 'DESC' }} pagination={<DefaultPagination />} >
             <Datagrid bulkActionButtons={<RevisionBulkActionButtons />}>
                 <TextField source="comment" />
                 <DateField source="created_at" />
@@ -72,8 +74,6 @@ export const RevisionEdit = () => {
         </Edit>
     )
 }
-import { useNavigate } from 'react-router-dom';
-import { DefaultPagination } from '../shared/Shared';
 
 const DeployRevisionButton = () => {
     const { id } = useParams();

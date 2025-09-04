@@ -27,7 +27,7 @@ const PolicyBulkActionButtons = () => (
 );
 
 export const PolicyList = () => (
-    <InfiniteList filters={PolicyListFilters} sort={{ field: 'name', order: 'ASC' }} pagination={<DefaultPagination />} >
+    <InfiniteList perPage={25} filters={PolicyListFilters} sort={{ field: 'name', order: 'ASC' }} pagination={<DefaultPagination />} >
         <Datagrid bulkActionButtons={<PolicyBulkActionButtons />}>
             <TextField source="name" />
             <TextField source="comment" />

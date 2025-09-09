@@ -673,10 +673,9 @@ const PolicyUsageReferences = () => {
             {references.policies.length > 0 && (
                 <SimpleShowLayout>
                     <ReferenceArrayField record={references} source="policies" reference="policies">
-                        <Datagrid>
-                            <TextField source="name" />
-                            <ShowButton />
-                        </Datagrid>
+                        <SingleFieldList linkType="show" >
+                            <ChipField source="name" />
+                        </SingleFieldList>
                     </ReferenceArrayField>
                 </SimpleShowLayout>
             )}

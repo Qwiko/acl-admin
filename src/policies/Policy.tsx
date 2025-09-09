@@ -5,15 +5,16 @@ import CheckIcon from '@mui/icons-material/Check';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
 import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Edit';
 import HistoryIcon from '@mui/icons-material/History';
 import { Box, DialogContent, Tooltip, Typography } from "@mui/material";
 import React, { useEffect, useState } from 'react';
-import { ArrayField, ArrayInput, AutocompleteArrayInput, AutocompleteInput, BooleanField, BooleanInput, BulkDeleteButton, Button, ButtonProps, ChipField, Create, Datagrid, DateField, DeleteButton, Edit, EditButton, Form, IconButtonWithTooltip, InfiniteList, Link, ReferenceArrayField, ReferenceArrayInput, ReferenceField, ReferenceInput, required, SelectField, SelectInput, Show, ShowButton, SimpleForm, SimpleFormIterator, SimpleShowLayout, SingleFieldList, TextField, TextInput, TopToolbar, useDataProvider, useNotify, useRefresh, useSimpleFormIterator } from 'react-admin';
+import { ArrayField, ArrayInput, AutocompleteArrayInput, AutocompleteInput, BooleanField, BooleanInput, BulkDeleteButton, Button, ButtonProps, ChipField, Create, Datagrid, DateField, DateInput, DeleteButton, Edit, EditButton, Form, IconButtonWithTooltip, InfiniteList, Link, ReferenceArrayField, ReferenceArrayInput, ReferenceField, ReferenceInput, required, SelectField, SelectInput, Show, ShowButton, SimpleForm, SimpleFormIterator, SimpleShowLayout, SingleFieldList, TextField, TextInput, TopToolbar, useDataProvider, useNotify, useRecordContext, useRefresh, useResourceContext, useSimpleFormIterator } from 'react-admin';
 
 import { ActionChip, ColoredBooleanField, DefaultPagination, ReferenceNetworks, ReferenceServices } from '../shared/Shared';
 
 import { useSimpleFormIteratorItem } from 'react-admin';
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 import AppBar from '@mui/material/AppBar';
 import Dialog from '@mui/material/Dialog';
@@ -81,25 +82,15 @@ const RowEditor = () => {
     const { formState: { errors }, clearErrors, getValues, setValue } = useFormContext();
     const { index } = useSimpleFormIteratorItem();
     const sourceContext = useSourceContext();
-    const [open, setOpen] = React.useState(false);
+    const record = getValues(`terms.[${index}]`)
 
-    // const handleSave = (field: string, event: any) => {
-    //     var value = ""
-    //     if (Array.isArray(event)) {
-    //         value = event
-    //     }
-    //     else if (Number.isInteger(event)) {
-    //         value = event
-    //     }
-    //     else if ("checked" in (event?.target ?? {}) && event?.target?.value == "on") {
-    //         value = event?.target?.checked
-    //     } else {
-    //         value = event?.target?.value ?? null;
-    //     }
+    // From state open the row conditionally
+    const location = useLocation();
+    const { openArrayItem, termName } = location.state || {};
 
-    //     setValue(sourceContext.getSource(field), value, { shouldValidate: true, shouldDirty: true });
-    //     clearErrors(sourceContext.getSource(field))
-    // };
+    const shouldOpen = openArrayItem && (termName == record?.name)
+
+    const [open, setOpen] = React.useState(shouldOpen);
 
     const [localValues, setLocalValues] = useState<Record<string, any>>({});
 
@@ -130,7 +121,7 @@ const RowEditor = () => {
         setOpen(false);
     };
 
-    const record = getValues(`terms.[${index}]`)
+
 
 
     return (
@@ -177,6 +168,17 @@ const RowEditor = () => {
                             sx={{
                                 '& .MuiFormHelperText-root, & label': {
                                     color: errors?.terms?.[index]?.comment ? 'error.main' : undefined
+                                }
+                            }}
+                        />
+                        <TextInput
+                            source={`owner`}
+                            fullWidth={false}
+                            onChange={(e) => handleLocalChange("owner", e)}
+                            helperText={errors?.terms?.[index]?.owner?.message}
+                            sx={{
+                                '& .MuiFormHelperText-root, & label': {
+                                    color: errors?.terms?.[index]?.owner ? 'error.main' : undefined
                                 }
                             }}
                         />
@@ -328,9 +330,20 @@ const RowEditor = () => {
                                     }}
                                 />
                             </Box>
+                            <Box flex={1} mr={{ xs: 0, sm: '0.5em' }}>
+                                <DateInput
+                                    source="expiration"
+                                    onChange={(e) => handleLocalChange("expiration", e)}
+                                    helperText={errors?.terms?.[index]?.expiration?.message}
+                                    sx={{
+                                        '& .MuiFormHelperText-root, & label': {
+                                            color: errors?.terms?.[index]?.expiration ? 'error.main' : undefined
+                                        }
+                                    }}
+                                />
+                            </Box>
                         </Box>
                         <Box display={{ xs: 'block', sm: 'flex', width: '100%' }}>
-
                             <BooleanInput
                                 source="enabled"
                                 onChange={(e) => handleLocalChange("enabled", e)}
@@ -536,7 +549,7 @@ export const PolicyCreate = () => (
     <Create redirect="show">
         <SimpleForm>
             <TextInput source="name" validate={required()} />
-            <TextInput source="comment" />
+            {/* <TextInput source="comment" /> */}
             <TextInput source="custom_aerleon_header" label="Custom Aerleon Header" />
             <ReferenceArrayInput source="targets" reference='targets' />
             <ReferenceArrayInput source="tests" reference='tests' />
@@ -598,6 +611,41 @@ const PolicyListFilters = [
     <BooleanInput source="edited" label="Synchronized" format={(value) => !value} parse={(value) => !value} />
 ];
 
+const PolicyTermExpandPanel = () => {
+    const record = useRecordContext();
+    if (!record) return;
+    return (
+        <SimpleShowLayout direction="row">
+            <TextField source="comment" />
+            <TextField source="owner" />
+            <DateField source="expiration" locales="sv-SE" />
+        </SimpleShowLayout>
+    );
+};
+
+
+export const EditButtonWithState = () => {
+    const record = useRecordContext();
+    const resource = useResourceContext();
+
+    if (!record) return null;
+
+    return (
+
+        <Button
+            component={Link}
+            to={`/${resource}/${record?.policy_id}`}
+            startIcon={<EditIcon />}
+            state={{
+                openArrayItem: true,
+                termName: record?.name
+            }}
+            label="Edit"
+        >
+            <EditIcon />
+        </Button>
+    );
+};
 
 
 const PolicyUsageReferences = () => {
@@ -649,31 +697,25 @@ export const PolicyShow = () => {
     return (
         <Show actions={<PolicyShowActions />}>
 
-            <SimpleShowLayout>
-
+            <SimpleShowLayout direction="row">
                 <TextField source="name" />
-                <TextField source="comment" />
-                <TextField source="custom_aerleon_header" label="Custom Aerleon Header" />
-                <BooleanField source="edited" label="Synchronized" valueLabelTrue="No" valueLabelFalse="Yes" TrueIcon={CloseIcon} FalseIcon={CheckIcon} />
-            </SimpleShowLayout>
-            <SimpleShowLayout>
                 <TextField source="comment" />
             </SimpleShowLayout>
             <SimpleShowLayout direction="row">
                 <DateField source="created_at" />
                 <DateField source="updated_at" />
             </SimpleShowLayout>
+            <SimpleShowLayout direction="row">
+                <BooleanField source="edited" label="Synchronized" valueLabelTrue="no" valueLabelFalse="Yes" TrueIcon={CloseIcon} FalseIcon={CheckIcon} />
+                <TextField source="custom_aerleon_header" label="Custom Aerleon Header" />
+            </SimpleShowLayout>
 
-
-            <SimpleShowLayout >
+            <SimpleShowLayout direction="row">
                 <ReferenceArrayField source="targets" reference='targets' label="Connected Targets">
                     <SingleFieldList linkType="show" >
                         <ChipField source="name" />
                     </SingleFieldList>
                 </ReferenceArrayField>
-            </SimpleShowLayout>
-
-            <SimpleShowLayout >
                 <ReferenceArrayField source="tests" reference='tests' label="Connected Tests" >
                     <SingleFieldList linkType="show" >
                         <ChipField source="name" />
@@ -683,7 +725,7 @@ export const PolicyShow = () => {
 
             <SimpleShowLayout >
                 <ArrayField source="terms">
-                    <Datagrid bulkActionButtons={false} rowClick={false} empty={<CustomTermEmpty />} >
+                    <Datagrid bulkActionButtons={false} rowClick={false} empty={<CustomTermEmpty />} expand={PolicyTermExpandPanel} expandSingle>
                         <TextField source="name" sortable={false} />
                         <ColoredBooleanField source="enabled" sortable={false} />
                         <ReferenceNetworks source="source_networks" reference="networks" sortable={false} />
@@ -705,6 +747,7 @@ export const PolicyShow = () => {
                         ]} optionText={<ActionChip />} sortable={false} />
                         <ColoredBooleanField source="logging" sortable={false} />
                         <ReferenceField source="nested_policy_id" reference="policies" sortable={false} />
+                        <EditButtonWithState />
                     </Datagrid>
                 </ArrayField>
             </SimpleShowLayout >

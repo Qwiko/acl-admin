@@ -130,15 +130,15 @@ export const DynamicPolicyShow = () => {
         <Show actions={<DynamicPolicyShowActions />}>
             <SimpleShowLayout direction="row">
                 <TextField source="name" />
-                <BooleanField source="edited" label="Synchronized" valueLabelTrue="no" valueLabelFalse="Yes" TrueIcon={CloseIcon} FalseIcon={CheckIcon} />
-            </SimpleShowLayout>
-            <SimpleShowLayout>
                 <TextField source="comment" />
-                <TextField source="custom_aerleon_header" label="Custom Aerleon Header" />
             </SimpleShowLayout>
             <SimpleShowLayout direction="row">
                 <DateField source="created_at" />
                 <DateField source="updated_at" />
+            </SimpleShowLayout>
+            <SimpleShowLayout direction="row">
+                <BooleanField source="edited" label="Synchronized" valueLabelTrue="no" valueLabelFalse="Yes" TrueIcon={CloseIcon} FalseIcon={CheckIcon} />
+                <TextField source="custom_aerleon_header" label="Custom Aerleon Header" />
             </SimpleShowLayout>
             <SimpleShowLayout direction="row">
                 <SelectField source="filter_action" choices={[
@@ -156,15 +156,12 @@ export const DynamicPolicyShow = () => {
                 ]} />
             </SimpleShowLayout>
 
-            <SimpleShowLayout >
+            <SimpleShowLayout direction="row">
                 <ReferenceArrayField source="targets" reference='targets' label="Connected Targets">
                     <SingleFieldList linkType="show" empty={<>None</>}>
                         <ChipField source="name" />
                     </SingleFieldList>
                 </ReferenceArrayField>
-            </SimpleShowLayout>
-
-            <SimpleShowLayout >
                 <ReferenceArrayField source="tests" reference='tests' label="Connected Tests" >
                     <SingleFieldList linkType="show" empty={<>None</>}>
                         <ChipField source="name" />
@@ -172,14 +169,12 @@ export const DynamicPolicyShow = () => {
                 </ReferenceArrayField>
             </SimpleShowLayout>
 
-            <SimpleShowLayout>
+            <SimpleShowLayout direction="row">
                 <ReferenceArrayField source="source_filters" reference='networks'>
                     <SingleFieldList linkType="show" empty={<>Any</>}>
                         <ChipField source="name" />
                     </SingleFieldList>
                 </ReferenceArrayField>
-            </SimpleShowLayout>
-            <SimpleShowLayout>
                 <ReferenceArrayField source="destination_filters" reference='networks'>
                     <SingleFieldList linkType="show" empty={<>Any</>}>
                         <ChipField source="name" />
@@ -193,6 +188,7 @@ export const DynamicPolicyShow = () => {
                     </SingleFieldList>
                 </ReferenceArrayField>
             </SimpleShowLayout>
+
         </Show>
     );
 }

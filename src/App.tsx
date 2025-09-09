@@ -1,16 +1,15 @@
-
+import { fetchUtils } from "ra-core";
 import { Admin, Resource } from 'react-admin';
 import { Route } from 'react-router-dom';
 import { Layout } from './Layout';
-import dataProvider from './dataProvider';
 import authProvider from './authProvider';
-import { fetchUtils } from "ra-core";
+import dataProvider from './dataProvider';
 
+import deployers from './deployers';
+import deployments from './deployments';
 import dynamic_policies from './dynamic_policies';
 import networks from './networks';
 import policies from './policies';
-import deployers from './deployers';
-import deployments from './deployments';
 import revisions from './revisions';
 import services from './services';
 import targets from './targets';
